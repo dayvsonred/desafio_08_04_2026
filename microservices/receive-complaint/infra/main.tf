@@ -58,7 +58,10 @@ resource "aws_iam_role_policy" "lambda_policy" {
         Action = [
           "sqs:SendMessage"
         ]
-        Resource = var.classification_queue_arn
+        Resource = [
+          var.classification_queue_arn,
+          var.metrics_queue_arn
+        ]
       },
       {
         Effect = "Allow"
@@ -84,16 +87,17 @@ resource "aws_lambda_function" "receive_complaint" {
 
   environment {
     variables = {
-      AwsResources__ComplaintsTableName    = var.complaints_table_name
-      AwsResources__CategoriesTableName    = var.categories_table_name
-      AwsResources__ClassificationQueueUrl = var.classification_queue_url
-      AwsResources__ProcessingQueueUrl     = var.processing_queue_url
-      AwsResources__MessagesBucketName     = var.messages_bucket_name
-      AwsResources__BedrockModelId         = var.bedrock_model_id
-      Classification__MinimumWinningScore  = "2"
-      Classification__MinimumScoreGap      = "1"
+      AwsResources__ComplaintsTableName      = var.complaints_table_name
+      AwsResources__CategoriesTableName      = var.categories_table_name
+      AwsResources__ClassificationQueueUrl   = var.classification_queue_url
+      AwsResources__ProcessingQueueUrl       = var.processing_queue_url
+      AwsResources__MetricsQueueUrl          = var.metrics_queue_url
+      AwsResources__MessagesBucketName       = var.messages_bucket_name
+      AwsResources__BedrockModelId           = var.bedrock_model_id
+      Classification__MinimumWinningScore    = "2"
+      Classification__MinimumScoreGap        = "1"
       Classification__LowConfidenceThreshold = "0.75"
-      Classification__StrongCategoryRatio  = "0.8"
+      Classification__StrongCategoryRatio    = "0.8"
       Classification__MaxStrongCategoriesBeforeLlm = "2"
     }
   }

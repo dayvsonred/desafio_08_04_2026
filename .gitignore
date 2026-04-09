@@ -1,28 +1,49 @@
-# Angular specific
-/dist/
-/out-tsc/
-/tmp/
-/coverage/
-/e2e/test-output/
-/.angular/
-.angular/
-
-# Node modules and dependency files
-/node_modules/
-/package-lock.json
-/yarn.lock
-
-# Environment files
-/.env
-
-# Angular CLI and build artefacts
-/.angular-cli.json
-/.ng/
-
-# TypeScript cache
-*.tsbuildinfo
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.vs/
 
 # Logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Node (if used)
+node_modules/
+dist/
+out-tsc/
+tmp/
+coverage/
+.angular/
+.ng/
+*.tsbuildinfo
+
+# .NET / C#
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userprefs
+*.rsuser
+TestResults/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Environment / local config
+.env
+.env.*
+
+# Lambda packaging artifacts
+*.zip

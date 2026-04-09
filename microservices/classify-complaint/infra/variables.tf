@@ -44,6 +44,14 @@ variable "processing_queue_arn" {
   type = string
 }
 
+variable "metrics_queue_url" {
+  type = string
+}
+
+variable "metrics_queue_arn" {
+  type = string
+}
+
 variable "messages_bucket_name" {
   type    = string
   default = "itau_desafio_2026"

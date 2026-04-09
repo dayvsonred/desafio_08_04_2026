@@ -6,4 +6,5 @@ public interface IQueuePublisher
 {
     Task PublishClassificationRequestedAsync(QueueMessage message, CancellationToken cancellationToken);
     Task PublishProcessingRequestedAsync(QueueMessage message, CancellationToken cancellationToken);
+    Task PublishMetricsEventAsync(MetricsEventMessage message, CancellationToken cancellationToken);
 }

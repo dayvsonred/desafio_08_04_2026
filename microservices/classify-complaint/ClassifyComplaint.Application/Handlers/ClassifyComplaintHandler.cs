@@ -107,6 +107,14 @@ public sealed class ClassifyComplaintHandler
                 CreatedAtUtc = _clock.UtcNow
             }, cancellationToken);
 
+            await _queuePublisher.PublishMetricsEventAsync(new MetricsEventMessage
+            {
+                ComplaintId = complaintId,
+                CorrelationId = effectiveCorrelationId,
+                EventType = "CLASSIFIED",
+                CreatedAtUtc = _clock.UtcNow
+            }, cancellationToken);
+
             _logger.LogInformation(
                 "Complaint classified. complaintId={ComplaintId} correlationId={CorrelationId} source={DecisionSource} fallbackReason={FallbackReason}",
                 complaintId,
@@ -122,6 +130,21 @@ public sealed class ClassifyComplaintHandler
                 exception.Message,
                 _clock.UtcNow,
                 cancellationToken);
+
+            try
+            {
+                await _queuePublisher.PublishMetricsEventAsync(new MetricsEventMessage
+                {
+                    ComplaintId = complaintId,
+                    CorrelationId = effectiveCorrelationId,
+                    EventType = "CLASSIFICATION_FAILED",
+                    CreatedAtUtc = _clock.UtcNow
+                }, cancellationToken);
+            }
+            catch (Exception metricsException)
+            {
+                _logger.LogWarning(metricsException, "Failed to publish metrics event. complaintId={ComplaintId} correlationId={CorrelationId}", complaintId, effectiveCorrelationId);
+            }
 
             _logger.LogError(exception, "Classification failed. complaintId={ComplaintId} correlationId={CorrelationId}", complaintId, effectiveCorrelationId);
             throw;

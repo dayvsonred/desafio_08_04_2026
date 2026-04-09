@@ -28,6 +28,8 @@ terraform plan `
   -var "classification_queue_arn=<CLASSIFICATION_QUEUE_ARN>" `
   -var "processing_queue_url=<PROCESSING_QUEUE_URL>" `
   -var "processing_queue_arn=<PROCESSING_QUEUE_ARN>" `
+  -var "metrics_queue_url=<METRICS_QUEUE_URL>" `
+  -var "metrics_queue_arn=<METRICS_QUEUE_ARN>" `
   -var "messages_bucket_name=itau_desafio_2026"
 terraform apply `
   -var "lambda_zip_path=<PATH_ZIP>" `
@@ -39,5 +41,7 @@ terraform apply `
   -var "classification_queue_arn=<CLASSIFICATION_QUEUE_ARN>" `
   -var "processing_queue_url=<PROCESSING_QUEUE_URL>" `
   -var "processing_queue_arn=<PROCESSING_QUEUE_ARN>" `
+  -var "metrics_queue_url=<METRICS_QUEUE_URL>" `
+  -var "metrics_queue_arn=<METRICS_QUEUE_ARN>" `
   -var "messages_bucket_name=itau_desafio_2026"
 ```

@@ -67,6 +67,13 @@ resource "aws_iam_role_policy" "lambda_policy" {
       {
         Effect = "Allow"
         Action = [
+          "sqs:SendMessage"
+        ]
+        Resource = var.metrics_queue_arn
+      },
+      {
+        Effect = "Allow"
+        Action = [
           "s3:GetObject"
         ]
         Resource = "arn:aws:s3:::${var.messages_bucket_name}/complaint_message_received/*"
@@ -99,6 +106,7 @@ resource "aws_lambda_function" "process_classified_complaint" {
       AwsResources__CategoriesTableName      = var.categories_table_name
       AwsResources__ClassificationQueueUrl   = var.classification_queue_url
       AwsResources__ProcessingQueueUrl       = var.processing_queue_url
+      AwsResources__MetricsQueueUrl          = var.metrics_queue_url
       AwsResources__MessagesBucketName       = var.messages_bucket_name
       AwsResources__BedrockModelId           = var.bedrock_model_id
       Classification__MinimumWinningScore    = "2"

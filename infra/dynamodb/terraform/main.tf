@@ -59,6 +59,29 @@ resource "aws_dynamodb_table" "categories" {
   }
 }
 
+resource "aws_dynamodb_table" "daily_metrics" {
+  name         = "${var.project_name}-daily-metrics"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "PK"
+  range_key    = "SK"
+
+  attribute {
+    name = "PK"
+    type = "S"
+  }
+
+  attribute {
+    name = "SK"
+    type = "S"
+  }
+
+  tags = {
+    Service = "complaint-classifier"
+    Domain  = "daily-metrics"
+    Phase   = "1"
+  }
+}
+
 resource "aws_dynamodb_table_item" "category_imobiliario" {
   table_name = aws_dynamodb_table.categories.name
   hash_key   = aws_dynamodb_table.categories.hash_key

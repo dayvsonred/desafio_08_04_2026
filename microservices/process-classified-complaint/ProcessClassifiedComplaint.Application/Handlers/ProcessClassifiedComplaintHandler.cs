@@ -1,5 +1,6 @@
 using ComplaintClassifier.Application.Contracts;
 using ComplaintClassifier.Domain.Enums;
+using ComplaintClassifier.Domain.Messages;
 using Microsoft.Extensions.Logging;
 
 namespace ComplaintClassifier.Application.Handlers;
@@ -19,17 +20,20 @@ public sealed class ProcessClassifiedComplaintHandler
 
     private readonly IComplaintRepository _complaintRepository;
     private readonly IComplaintMessageStorage _messageStorage;
+    private readonly IQueuePublisher _queuePublisher;
     private readonly IClock _clock;
     private readonly ILogger<ProcessClassifiedComplaintHandler> _logger;
 
     public ProcessClassifiedComplaintHandler(
         IComplaintRepository complaintRepository,
         IComplaintMessageStorage messageStorage,
+        IQueuePublisher queuePublisher,
         IClock clock,
         ILogger<ProcessClassifiedComplaintHandler> logger)
     {
         _complaintRepository = complaintRepository;
         _messageStorage = messageStorage;
+        _queuePublisher = queuePublisher;
         _clock = clock;
         _logger = logger;
     }
@@ -98,6 +102,14 @@ public sealed class ProcessClassifiedComplaintHandler
                 null,
                 cancellationToken);
 
+            await _queuePublisher.PublishMetricsEventAsync(new MetricsEventMessage
+            {
+                ComplaintId = complaintId,
+                CorrelationId = effectiveCorrelationId,
+                EventType = "PROCESSED",
+                CreatedAtUtc = _clock.UtcNow
+            }, cancellationToken);
+
             _logger.LogInformation(
                 "Complaint marked as PROCESSED. complaintId={ComplaintId} correlationId={CorrelationId} messageId={MessageId} processedS3Key={ProcessedS3Key}",
                 complaintId,
@@ -113,6 +125,21 @@ public sealed class ProcessClassifiedComplaintHandler
                 exception.Message,
                 _clock.UtcNow,
                 cancellationToken);
+
+            try
+            {
+                await _queuePublisher.PublishMetricsEventAsync(new MetricsEventMessage
+                {
+                    ComplaintId = complaintId,
+                    CorrelationId = effectiveCorrelationId,
+                    EventType = "PROCESSING_FAILED",
+                    CreatedAtUtc = _clock.UtcNow
+                }, cancellationToken);
+            }
+            catch (Exception metricsException)
+            {
+                _logger.LogWarning(metricsException, "Failed to publish metrics event. complaintId={ComplaintId} correlationId={CorrelationId}", complaintId, effectiveCorrelationId);
+            }
 
             _logger.LogError(exception, "Processing failed. complaintId={ComplaintId} correlationId={CorrelationId} messageId={MessageId}", complaintId, effectiveCorrelationId, messageId);
             throw;

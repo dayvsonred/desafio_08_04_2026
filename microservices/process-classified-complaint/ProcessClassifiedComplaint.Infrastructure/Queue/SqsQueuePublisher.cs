@@ -27,11 +27,14 @@ public sealed class SqsQueuePublisher : IQueuePublisher
     public Task PublishProcessingRequestedAsync(QueueMessage message, CancellationToken cancellationToken)
         => PublishAsync(_options.ProcessingQueueUrl, message, cancellationToken);
 
-    private async Task PublishAsync(string queueUrl, QueueMessage message, CancellationToken cancellationToken)
+    public Task PublishMetricsEventAsync(MetricsEventMessage message, CancellationToken cancellationToken)
+        => PublishAsync(_options.MetricsQueueUrl, message, cancellationToken);
+
+    private async Task PublishAsync(string queueUrl, object message, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(queueUrl))
         {
-            throw new InvalidOperationException("Queue URL não configurada.");
+            throw new InvalidOperationException("Queue URL nao configurada.");
         }
 
         var body = JsonSerializer.Serialize(message, JsonSerializerOptions);

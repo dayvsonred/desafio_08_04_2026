@@ -23,6 +23,11 @@ resource "aws_sqs_queue" "processing_dlq" {
   message_retention_seconds = 1209600
 }
 
+resource "aws_sqs_queue" "metrics_dlq" {
+  name                      = "${var.project_name}-metrics-dlq"
+  message_retention_seconds = 1209600
+}
+
 resource "aws_sqs_queue" "classification" {
   name                       = "${var.project_name}-classification"
   visibility_timeout_seconds = var.classification_visibility_timeout_seconds
@@ -43,6 +48,18 @@ resource "aws_sqs_queue" "processing" {
 
   redrive_policy = jsonencode({
     deadLetterTargetArn = aws_sqs_queue.processing_dlq.arn
+    maxReceiveCount     = 5
+  })
+}
+
+resource "aws_sqs_queue" "metrics" {
+  name                       = "${var.project_name}-metrics"
+  visibility_timeout_seconds = var.metrics_visibility_timeout_seconds
+  message_retention_seconds  = 345600
+  receive_wait_time_seconds  = 10
+
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.metrics_dlq.arn
     maxReceiveCount     = 5
   })
 }

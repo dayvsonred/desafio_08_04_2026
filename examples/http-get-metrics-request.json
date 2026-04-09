@@ -1,0 +1,7 @@
+{
+  "method": "GET",
+  "url": "https://<api-id>.execute-api.sa-east-1.amazonaws.com/metrics?day=20260409",
+  "headers": {
+    "x-correlation-id": "corr-metrics-20260409"
+  }
+}

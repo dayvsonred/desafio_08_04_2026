@@ -1,7 +1,8 @@
 {
   "notes": {
     "complaintsTable": "Item principal por reclamacao (PK=COMPLAINT#<id>, SK=METADATA)",
-    "categoriesTable": "Categoria pre-cadastrada (PK=CATEGORY#<nome>, SK=METADATA)"
+    "categoriesTable": "Categoria pre-cadastrada (PK=CATEGORY#<nome>, SK=METADATA)",
+    "dailyMetricsTable": "Contadores diarios por evento (PK=DAY#yyyyMMdd, SK=METADATA)"
   },
   "complaints": {
     "keys": {
@@ -99,19 +100,6 @@
           "createdAt": "2026-04-09T18:00:00.0000000Z",
           "updatedAt": "2026-04-09T18:00:35.0000000Z"
         }
-      },
-      {
-        "scenario": "CLASSIFICATION_FAILED",
-        "item": {
-          "PK": "COMPLAINT#cmp-20260409-0099",
-          "SK": "METADATA",
-          "complaintId": "cmp-20260409-0099",
-          "messageReceivedS3Key": "complaint_message_received/20260409/cmp-20260409-0099.json",
-          "status": "CLASSIFICATION_FAILED",
-          "error": "Nenhuma categoria cadastrada no DynamoDB.",
-          "createdAt": "2026-04-09T18:10:00.0000000Z",
-          "updatedAt": "2026-04-09T18:10:05.0000000Z"
-        }
       }
     ]
   },
@@ -143,6 +131,29 @@
           "senha"
         ],
         "description": "Problemas para entrar na conta e autenticar."
+      }
+    ]
+  },
+  "dailyMetrics": {
+    "keys": {
+      "partitionKey": "PK",
+      "sortKey": "SK"
+    },
+    "examples": [
+      {
+        "scenario": "dia com movimento",
+        "item": {
+          "PK": "DAY#20260409",
+          "SK": "METADATA",
+          "day": "20260409",
+          "receivedCount": 120,
+          "classifiedCount": 115,
+          "classificationFailedCount": 5,
+          "processedSuccessCount": 112,
+          "processedErrorCount": 3,
+          "createdAt": "2026-04-09T08:00:00.0000000Z",
+          "updatedAt": "2026-04-09T18:45:33.0000000Z"
+        }
       }
     ]
   }

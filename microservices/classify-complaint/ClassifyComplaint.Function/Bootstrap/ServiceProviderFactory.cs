@@ -56,6 +56,7 @@ public static class ServiceProviderFactory
             CategoriesTableName = configuration["AwsResources:CategoriesTableName"] ?? "categories",
             ClassificationQueueUrl = configuration["AwsResources:ClassificationQueueUrl"] ?? string.Empty,
             ProcessingQueueUrl = configuration["AwsResources:ProcessingQueueUrl"] ?? string.Empty,
+            MetricsQueueUrl = configuration["AwsResources:MetricsQueueUrl"] ?? string.Empty,
             MessagesBucketName = configuration["AwsResources:MessagesBucketName"] ?? "itau_desafio_2026",
             BedrockModelId = configuration["AwsResources:BedrockModelId"] ?? "anthropic.claude-3-haiku-20240307-v1:0"
         };

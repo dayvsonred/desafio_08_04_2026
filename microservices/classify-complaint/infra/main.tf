@@ -76,7 +76,10 @@ resource "aws_iam_role_policy" "lambda_policy" {
         Action = [
           "sqs:SendMessage"
         ]
-        Resource = var.processing_queue_arn
+        Resource = [
+          var.processing_queue_arn,
+          var.metrics_queue_arn
+        ]
       },
       {
         Effect = "Allow"
@@ -113,6 +116,7 @@ resource "aws_lambda_function" "classify_complaint" {
       AwsResources__CategoriesTableName      = var.categories_table_name
       AwsResources__ClassificationQueueUrl   = var.classification_queue_url
       AwsResources__ProcessingQueueUrl       = var.processing_queue_url
+      AwsResources__MetricsQueueUrl          = var.metrics_queue_url
       AwsResources__MessagesBucketName       = var.messages_bucket_name
       AwsResources__BedrockModelId           = var.bedrock_model_id
       Classification__MinimumWinningScore    = "2"

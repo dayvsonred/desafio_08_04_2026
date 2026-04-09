@@ -56,6 +56,8 @@ public sealed class ReceiveComplaintHandlerTests
         Assert.NotNull(queuePublisher.ClassificationMessage);
         Assert.Equal("cmp-123", queuePublisher.ClassificationMessage!.ComplaintId);
         Assert.Equal("corr-1", queuePublisher.ClassificationMessage.CorrelationId);
+        Assert.NotNull(queuePublisher.MetricsMessage);
+        Assert.Equal("RECEIVED", queuePublisher.MetricsMessage!.EventType);
 
         Assert.Equal("Mensagem de reclamacao", storage.StoredMessage);
     }
@@ -89,6 +91,7 @@ public sealed class ReceiveComplaintHandlerTests
     private sealed class FakeQueuePublisher : IQueuePublisher
     {
         public QueueMessage? ClassificationMessage { get; private set; }
+        public MetricsEventMessage? MetricsMessage { get; private set; }
 
         public Task PublishClassificationRequestedAsync(QueueMessage message, CancellationToken cancellationToken)
         {
@@ -98,6 +101,12 @@ public sealed class ReceiveComplaintHandlerTests
 
         public Task PublishProcessingRequestedAsync(QueueMessage message, CancellationToken cancellationToken)
             => Task.CompletedTask;
+
+        public Task PublishMetricsEventAsync(MetricsEventMessage message, CancellationToken cancellationToken)
+        {
+            MetricsMessage = message;
+            return Task.CompletedTask;
+        }
     }
 
     private sealed class FakeComplaintMessageStorage : IComplaintMessageStorage

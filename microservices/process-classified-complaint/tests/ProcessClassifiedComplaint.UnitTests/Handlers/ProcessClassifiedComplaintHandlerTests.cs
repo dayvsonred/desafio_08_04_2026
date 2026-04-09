@@ -2,6 +2,7 @@ using ComplaintClassifier.Application.Contracts;
 using ComplaintClassifier.Application.Handlers;
 using ComplaintClassifier.Domain.Entities;
 using ComplaintClassifier.Domain.Enums;
+using ComplaintClassifier.Domain.Messages;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace ProcessClassifiedComplaint.UnitTests.Handlers;
@@ -19,6 +20,7 @@ public sealed class ProcessClassifiedComplaintHandlerTests
         var handler = new ProcessClassifiedComplaintHandler(
             repository,
             new FakeComplaintMessageStorage(),
+            new FakeQueuePublisher(),
             new FixedClock(new DateTime(2026, 4, 9, 12, 0, 0, DateTimeKind.Utc)),
             NullLogger<ProcessClassifiedComplaintHandler>.Instance);
 
@@ -37,9 +39,11 @@ public sealed class ProcessClassifiedComplaintHandlerTests
         };
 
         var storage = new FakeComplaintMessageStorage();
+        var queuePublisher = new FakeQueuePublisher();
         var handler = new ProcessClassifiedComplaintHandler(
             repository,
             storage,
+            queuePublisher,
             new FixedClock(new DateTime(2026, 4, 9, 12, 0, 0, DateTimeKind.Utc)),
             NullLogger<ProcessClassifiedComplaintHandler>.Instance);
 
@@ -50,6 +54,8 @@ public sealed class ProcessClassifiedComplaintHandlerTests
         Assert.Equal(ComplaintStatus.PROCESSED, repository.StatusTransitions[1]);
         Assert.Equal("complaint_message_processed/20260409/cmp-2_msg-2.json", repository.ProcessedMessageS3Key);
         Assert.Equal("mensagem original", storage.LoadedMessage);
+        Assert.NotNull(queuePublisher.LastMetricsEvent);
+        Assert.Equal("PROCESSED", queuePublisher.LastMetricsEvent!.EventType);
     }
 
     private static ComplaintRecord BuildComplaint(string complaintId, ComplaintStatus status)
@@ -124,6 +130,23 @@ public sealed class ProcessClassifiedComplaintHandlerTests
 
         public Task<string> SaveProcessedMessageAsync(string complaintId, string correlationId, string message, ClassificationResult classification, string? messageId, DateTime processedAtUtc, CancellationToken cancellationToken)
             => Task.FromResult($"complaint_message_processed/{processedAtUtc:yyyyMMdd}/{complaintId}_{messageId}.json");
+    }
+
+    private sealed class FakeQueuePublisher : IQueuePublisher
+    {
+        public MetricsEventMessage? LastMetricsEvent { get; private set; }
+
+        public Task PublishClassificationRequestedAsync(QueueMessage message, CancellationToken cancellationToken)
+            => Task.CompletedTask;
+
+        public Task PublishProcessingRequestedAsync(QueueMessage message, CancellationToken cancellationToken)
+            => Task.CompletedTask;
+
+        public Task PublishMetricsEventAsync(MetricsEventMessage message, CancellationToken cancellationToken)
+        {
+            LastMetricsEvent = message;
+            return Task.CompletedTask;
+        }
     }
 
     private sealed class FixedClock : IClock

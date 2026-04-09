@@ -1,0 +1,10 @@
+{
+  "day": "20260409",
+  "receivedCount": 120,
+  "classifiedCount": 115,
+  "classificationFailedCount": 5,
+  "processedSuccessCount": 112,
+  "processedErrorCount": 3,
+  "createdAtUtc": "2026-04-09T08:00:00.0000000Z",
+  "updatedAtUtc": "2026-04-09T18:45:33.0000000Z"
+}

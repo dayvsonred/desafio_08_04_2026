@@ -1,0 +1,18 @@
+{
+  "Records": [
+    {
+      "messageId": "3a0f6b63-e6bc-4529-8917-510e443d8cd4",
+      "receiptHandle": "AQEB...",
+      "body": "{\"complaintId\":\"cmp-20260409-0001\",\"correlationId\":\"corr-20260409-0001\",\"eventType\":\"CLASSIFIED\",\"createdAtUtc\":\"2026-04-09T18:05:22.0000000Z\"}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "1712671522000"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "f9e8d7c6b5a4",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:sa-east-1:123456789012:complaint-metrics-queue",
+      "awsRegion": "sa-east-1"
+    }
+  ]
+}

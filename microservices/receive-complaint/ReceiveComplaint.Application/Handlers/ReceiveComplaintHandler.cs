@@ -75,6 +75,14 @@ public sealed class ReceiveComplaintHandler
             CreatedAtUtc = now
         }, cancellationToken);
 
+        await _queuePublisher.PublishMetricsEventAsync(new MetricsEventMessage
+        {
+            ComplaintId = complaintId,
+            CorrelationId = effectiveCorrelationId,
+            EventType = "RECEIVED",
+            CreatedAtUtc = now
+        }, cancellationToken);
+
         _logger.LogInformation(
             "Complaint received and queued. complaintId={ComplaintId} correlationId={CorrelationId} messageReceivedS3Key={MessageReceivedS3Key}",
             complaintId,

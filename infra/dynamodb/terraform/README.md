@@ -21,6 +21,8 @@ terraform apply
 - `complaints_table_arn`
 - `categories_table_name`
 - `categories_table_arn`
+- `daily_metrics_table_name`
+- `daily_metrics_table_arn`
 
 Use esses outputs nos módulos das Lambdas.
 

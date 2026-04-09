@@ -22,3 +22,8 @@ variable "processing_visibility_timeout_seconds" {
   description = "Visibility timeout for processing queue"
 }
 
+variable "metrics_visibility_timeout_seconds" {
+  type        = number
+  default     = 120
+  description = "Visibility timeout for metrics queue"
+}

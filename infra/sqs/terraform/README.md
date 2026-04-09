@@ -21,8 +21,10 @@ terraform apply
 - `classification_queue_arn`
 - `processing_queue_url`
 - `processing_queue_arn`
+- `metrics_queue_url`
+- `metrics_queue_arn`
 - `classification_dlq_arn`
 - `processing_dlq_arn`
+- `metrics_dlq_arn`
 
 Use esses outputs nos módulos das Lambdas.
-
