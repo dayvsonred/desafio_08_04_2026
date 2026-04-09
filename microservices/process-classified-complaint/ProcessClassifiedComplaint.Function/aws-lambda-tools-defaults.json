@@ -1,6 +1,6 @@
 {
   "profile": "default",
-  "region": "us-east-1",
+  "region": "sa-east-1",
   "configuration": "Release",
   "framework": "net8.0",
   "function-runtime": "dotnet8",
@@ -9,3 +9,4 @@
   "function-memory-size": 512,
   "function-timeout": 30
 }
+

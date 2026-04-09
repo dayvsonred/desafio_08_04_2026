@@ -11,36 +11,36 @@ Cada microservico possui implementacao propria de `domain`, `application`, `infr
 +-- ComplaintClassification.sln
 +-- README.md
 +-- examples/
-¦   +-- bedrock-prompt-example.txt
-¦   +-- http-request.json
-¦   +-- sqs-classification-event.json
-¦   +-- sqs-processing-event.json
+ï¿½   +-- bedrock-prompt-example.txt
+ï¿½   +-- http-request.json
+ï¿½   +-- sqs-classification-event.json
+ï¿½   +-- sqs-processing-event.json
 +-- infra/
-¦   +-- api-gateway/terraform/
-¦   +-- dynamodb/terraform/
-¦   +-- sqs/terraform/
+ï¿½   +-- api-gateway/terraform/
+ï¿½   +-- dynamodb/terraform/
+ï¿½   +-- sqs/terraform/
 +-- microservices/
-¦   +-- receive-complaint/
-¦   ¦   +-- ReceiveComplaint.Domain/
-¦   ¦   +-- ReceiveComplaint.Application/
-¦   ¦   +-- ReceiveComplaint.Infrastructure/
-¦   ¦   +-- ReceiveComplaint.Function/
-¦   ¦   +-- infra/
-¦   ¦   +-- tests/ReceiveComplaint.UnitTests/
-¦   +-- classify-complaint/
-¦   ¦   +-- ClassifyComplaint.Domain/
-¦   ¦   +-- ClassifyComplaint.Application/
-¦   ¦   +-- ClassifyComplaint.Infrastructure/
-¦   ¦   +-- ClassifyComplaint.Function/
-¦   ¦   +-- infra/
-¦   ¦   +-- tests/ClassifyComplaint.UnitTests/
-¦   +-- process-classified-complaint/
-¦       +-- ProcessClassifiedComplaint.Domain/
-¦       +-- ProcessClassifiedComplaint.Application/
-¦       +-- ProcessClassifiedComplaint.Infrastructure/
-¦       +-- ProcessClassifiedComplaint.Function/
-¦       +-- infra/
-¦       +-- tests/ProcessClassifiedComplaint.UnitTests/
+ï¿½   +-- receive-complaint/
+ï¿½   ï¿½   +-- ReceiveComplaint.Domain/
+ï¿½   ï¿½   +-- ReceiveComplaint.Application/
+ï¿½   ï¿½   +-- ReceiveComplaint.Infrastructure/
+ï¿½   ï¿½   +-- ReceiveComplaint.Function/
+ï¿½   ï¿½   +-- infra/
+ï¿½   ï¿½   +-- tests/ReceiveComplaint.UnitTests/
+ï¿½   +-- classify-complaint/
+ï¿½   ï¿½   +-- ClassifyComplaint.Domain/
+ï¿½   ï¿½   +-- ClassifyComplaint.Application/
+ï¿½   ï¿½   +-- ClassifyComplaint.Infrastructure/
+ï¿½   ï¿½   +-- ClassifyComplaint.Function/
+ï¿½   ï¿½   +-- infra/
+ï¿½   ï¿½   +-- tests/ClassifyComplaint.UnitTests/
+ï¿½   +-- process-classified-complaint/
+ï¿½       +-- ProcessClassifiedComplaint.Domain/
+ï¿½       +-- ProcessClassifiedComplaint.Application/
+ï¿½       +-- ProcessClassifiedComplaint.Infrastructure/
+ï¿½       +-- ProcessClassifiedComplaint.Function/
+ï¿½       +-- infra/
+ï¿½       +-- tests/ProcessClassifiedComplaint.UnitTests/
 ```
 
 ## Fluxo implementado
@@ -101,3 +101,47 @@ dotnet test microservices/process-classified-complaint/tests/ProcessClassifiedCo
 - Evento SQS classificacao: `examples/sqs-classification-event.json`
 - Evento SQS processamento: `examples/sqs-processing-event.json`
 - Prompt Bedrock: `examples/bedrock-prompt-example.txt`
+
+## Terraform por pasta
+
+Cada pasta Terraform agora possui um `README.md` com comandos prontos de deploy em PowerShell:
+
+- `infra/dynamodb/terraform/README.md`
+- `infra/sqs/terraform/README.md`
+- `infra/api-gateway/terraform/README.md`
+- `microservices/receive-complaint/infra/README.md`
+- `microservices/classify-complaint/infra/README.md`
+- `microservices/process-classified-complaint/infra/README.md`
+
+
+
+Ordem correta:
+
+dynamodb
+sqs
+Lambda receive-complaint
+Lambda classify-complaint
+Lambda process-classified-complaint
+api-gateway por Ãºltimo
+Motivo:
+
+O API Gateway precisa apontar para a Lambda ReceiveComplaint.
+Sem a Lambda criada, vocÃª nÃ£o tem os valores exigidos.
+O que sÃ£o os parÃ¢metros:
+
+INVOKE_ARN (receive_lambda_invoke_arn)
+ARN de invocaÃ§Ã£o da Lambda (usado na integraÃ§Ã£o do API Gateway).
+FUNCTION_NAME (receive_lambda_name)
+Nome da funÃ§Ã£o Lambda (usado no aws_lambda_permission).
+De onde pegar:
+
+do output do Terraform de microservices/receive-complaint/infra:
+lambda_invoke_arn
+lambda_name
+
+
+Exemplo:
+
+cd microservices\receive-complaint\infra
+terraform output lambda_invoke_arn
+terraform output lambda_name

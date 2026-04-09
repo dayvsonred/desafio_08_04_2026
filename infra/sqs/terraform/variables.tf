@@ -1,7 +1,7 @@
 variable "aws_region" {
   type        = string
   description = "AWS region"
-  default     = "us-east-1"
+  default     = "sa-east-1"
 }
 
 variable "project_name" {
@@ -21,3 +21,4 @@ variable "processing_visibility_timeout_seconds" {
   default     = 120
   description = "Visibility timeout for processing queue"
 }
+

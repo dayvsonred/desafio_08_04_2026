@@ -1,7 +1,7 @@
 variable "aws_region" {
   type        = string
   description = "AWS region"
-  default     = "us-east-1"
+  default     = "sa-east-1"
 }
 
 variable "project_name" {
@@ -9,3 +9,4 @@ variable "project_name" {
   description = "Project name prefix"
   default     = "complaint-classifier-phase1"
 }
+
