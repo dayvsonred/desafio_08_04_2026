@@ -1,0 +1,103 @@
+terraform {
+  required_version = ">= 1.5.0"
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = var.aws_region
+}
+
+resource "aws_iam_role" "lambda_role" {
+  name = "${var.project_name}-process-lambda-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "lambda_policy" {
+  name = "${var.project_name}-process-lambda-policy"
+  role = aws_iam_role.lambda_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "arn:aws:logs:*:*:*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:UpdateItem"
+        ]
+        Resource = var.complaints_table_arn
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:ChangeMessageVisibility",
+          "sqs:GetQueueAttributes"
+        ]
+        Resource = var.processing_queue_arn
+      }
+    ]
+  })
+}
+
+resource "aws_lambda_function" "process_classified_complaint" {
+  function_name = "${var.project_name}-process-classified-complaint"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "ProcessClassifiedComplaint.Function::ProcessClassifiedComplaint.Function.Function::FunctionHandler"
+  runtime       = "dotnet8"
+  timeout       = 30
+  memory_size   = 512
+  filename      = var.lambda_zip_path
+
+  source_code_hash = filebase64sha256(var.lambda_zip_path)
+
+  environment {
+    variables = {
+      AwsResources__ComplaintsTableName      = var.complaints_table_name
+      AwsResources__CategoriesTableName      = var.categories_table_name
+      AwsResources__ClassificationQueueUrl   = var.classification_queue_url
+      AwsResources__ProcessingQueueUrl       = var.processing_queue_url
+      AwsResources__BedrockModelId           = var.bedrock_model_id
+      Classification__MinimumWinningScore    = "2"
+      Classification__MinimumScoreGap        = "1"
+      Classification__LowConfidenceThreshold = "0.75"
+      Classification__StrongCategoryRatio    = "0.8"
+      Classification__MaxStrongCategoriesBeforeLlm = "2"
+    }
+  }
+}
+
+resource "aws_lambda_event_source_mapping" "processing_queue_mapping" {
+  event_source_arn        = var.processing_queue_arn
+  function_name           = aws_lambda_function.process_classified_complaint.arn
+  batch_size              = 10
+  function_response_types = ["ReportBatchItemFailures"]
+}

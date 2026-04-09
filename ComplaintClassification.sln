@@ -1,0 +1,122 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4CE1E263-2CC1-48E7-A5D8-4D54D8CA843C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComplaintClassifier.UnitTests", "tests\ComplaintClassifier.UnitTests\ComplaintClassifier.UnitTests.csproj", "{D211B25B-B2C2-4836-B044-B7591248A8A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "microservices", "microservices", "{229EAF4F-CEF5-4D72-8B01-340AFC2502F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "receive-complaint", "receive-complaint", "{90C7E8F3-C8C5-4F69-B3A5-7095AED3E5E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiveComplaint.Domain", "microservices\receive-complaint\ReceiveComplaint.Domain\ReceiveComplaint.Domain.csproj", "{1374C3C3-486A-4776-BF52-4ED6F3891479}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiveComplaint.Application", "microservices\receive-complaint\ReceiveComplaint.Application\ReceiveComplaint.Application.csproj", "{7F4844AC-61B0-4270-9A08-4CFBE3120DEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiveComplaint.Infrastructure", "microservices\receive-complaint\ReceiveComplaint.Infrastructure\ReceiveComplaint.Infrastructure.csproj", "{670F73B5-1CB1-4D47-92F1-B146125BDA1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiveComplaint.Function", "microservices\receive-complaint\ReceiveComplaint.Function\ReceiveComplaint.Function.csproj", "{AB8A1A3A-D6E3-4CE6-A02C-235B4D877F93}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "classify-complaint", "classify-complaint", "{86BA9839-76FE-4295-A6F5-8406EF01F628}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifyComplaint.Domain", "microservices\classify-complaint\ClassifyComplaint.Domain\ClassifyComplaint.Domain.csproj", "{4541E21B-96BC-4B2A-8FF8-DE70734C209F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifyComplaint.Application", "microservices\classify-complaint\ClassifyComplaint.Application\ClassifyComplaint.Application.csproj", "{7CDEF322-3FB6-4D59-A676-4A8CC5D38248}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifyComplaint.Infrastructure", "microservices\classify-complaint\ClassifyComplaint.Infrastructure\ClassifyComplaint.Infrastructure.csproj", "{8F9A3365-E5AE-43B3-AE1B-E520CE5FFCAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifyComplaint.Function", "microservices\classify-complaint\ClassifyComplaint.Function\ClassifyComplaint.Function.csproj", "{8B70653A-88F0-4DD2-A5E2-5B3B9C42396B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "process-classified-complaint", "process-classified-complaint", "{FD74022B-5CE2-47A5-9FD1-9D646A1ECE67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessClassifiedComplaint.Domain", "microservices\process-classified-complaint\ProcessClassifiedComplaint.Domain\ProcessClassifiedComplaint.Domain.csproj", "{D565C98C-2936-4CCE-BFB9-AE910BB85EAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessClassifiedComplaint.Application", "microservices\process-classified-complaint\ProcessClassifiedComplaint.Application\ProcessClassifiedComplaint.Application.csproj", "{19E6FD29-CDFB-4781-BFDF-9ECA4E67A888}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessClassifiedComplaint.Infrastructure", "microservices\process-classified-complaint\ProcessClassifiedComplaint.Infrastructure\ProcessClassifiedComplaint.Infrastructure.csproj", "{8441C28B-7E79-485A-B53A-FBE0E7133320}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessClassifiedComplaint.Function", "microservices\process-classified-complaint\ProcessClassifiedComplaint.Function\ProcessClassifiedComplaint.Function.csproj", "{1995A18B-0013-4230-BC1F-DDB823E72DA9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D211B25B-B2C2-4836-B044-B7591248A8A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D211B25B-B2C2-4836-B044-B7591248A8A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D211B25B-B2C2-4836-B044-B7591248A8A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D211B25B-B2C2-4836-B044-B7591248A8A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1374C3C3-486A-4776-BF52-4ED6F3891479}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1374C3C3-486A-4776-BF52-4ED6F3891479}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1374C3C3-486A-4776-BF52-4ED6F3891479}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1374C3C3-486A-4776-BF52-4ED6F3891479}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F4844AC-61B0-4270-9A08-4CFBE3120DEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F4844AC-61B0-4270-9A08-4CFBE3120DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F4844AC-61B0-4270-9A08-4CFBE3120DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F4844AC-61B0-4270-9A08-4CFBE3120DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{670F73B5-1CB1-4D47-92F1-B146125BDA1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{670F73B5-1CB1-4D47-92F1-B146125BDA1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{670F73B5-1CB1-4D47-92F1-B146125BDA1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{670F73B5-1CB1-4D47-92F1-B146125BDA1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB8A1A3A-D6E3-4CE6-A02C-235B4D877F93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB8A1A3A-D6E3-4CE6-A02C-235B4D877F93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB8A1A3A-D6E3-4CE6-A02C-235B4D877F93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB8A1A3A-D6E3-4CE6-A02C-235B4D877F93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4541E21B-96BC-4B2A-8FF8-DE70734C209F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4541E21B-96BC-4B2A-8FF8-DE70734C209F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4541E21B-96BC-4B2A-8FF8-DE70734C209F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4541E21B-96BC-4B2A-8FF8-DE70734C209F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CDEF322-3FB6-4D59-A676-4A8CC5D38248}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CDEF322-3FB6-4D59-A676-4A8CC5D38248}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CDEF322-3FB6-4D59-A676-4A8CC5D38248}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CDEF322-3FB6-4D59-A676-4A8CC5D38248}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F9A3365-E5AE-43B3-AE1B-E520CE5FFCAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F9A3365-E5AE-43B3-AE1B-E520CE5FFCAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F9A3365-E5AE-43B3-AE1B-E520CE5FFCAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F9A3365-E5AE-43B3-AE1B-E520CE5FFCAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B70653A-88F0-4DD2-A5E2-5B3B9C42396B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B70653A-88F0-4DD2-A5E2-5B3B9C42396B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B70653A-88F0-4DD2-A5E2-5B3B9C42396B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B70653A-88F0-4DD2-A5E2-5B3B9C42396B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D565C98C-2936-4CCE-BFB9-AE910BB85EAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D565C98C-2936-4CCE-BFB9-AE910BB85EAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D565C98C-2936-4CCE-BFB9-AE910BB85EAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D565C98C-2936-4CCE-BFB9-AE910BB85EAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19E6FD29-CDFB-4781-BFDF-9ECA4E67A888}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19E6FD29-CDFB-4781-BFDF-9ECA4E67A888}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19E6FD29-CDFB-4781-BFDF-9ECA4E67A888}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19E6FD29-CDFB-4781-BFDF-9ECA4E67A888}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8441C28B-7E79-485A-B53A-FBE0E7133320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8441C28B-7E79-485A-B53A-FBE0E7133320}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8441C28B-7E79-485A-B53A-FBE0E7133320}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8441C28B-7E79-485A-B53A-FBE0E7133320}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1995A18B-0013-4230-BC1F-DDB823E72DA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1995A18B-0013-4230-BC1F-DDB823E72DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1995A18B-0013-4230-BC1F-DDB823E72DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1995A18B-0013-4230-BC1F-DDB823E72DA9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D211B25B-B2C2-4836-B044-B7591248A8A6} = {4CE1E263-2CC1-48E7-A5D8-4D54D8CA843C}
+		{90C7E8F3-C8C5-4F69-B3A5-7095AED3E5E3} = {229EAF4F-CEF5-4D72-8B01-340AFC2502F5}
+		{1374C3C3-486A-4776-BF52-4ED6F3891479} = {90C7E8F3-C8C5-4F69-B3A5-7095AED3E5E3}
+		{7F4844AC-61B0-4270-9A08-4CFBE3120DEB} = {90C7E8F3-C8C5-4F69-B3A5-7095AED3E5E3}
+		{670F73B5-1CB1-4D47-92F1-B146125BDA1D} = {90C7E8F3-C8C5-4F69-B3A5-7095AED3E5E3}
+		{AB8A1A3A-D6E3-4CE6-A02C-235B4D877F93} = {90C7E8F3-C8C5-4F69-B3A5-7095AED3E5E3}
+		{86BA9839-76FE-4295-A6F5-8406EF01F628} = {229EAF4F-CEF5-4D72-8B01-340AFC2502F5}
+		{4541E21B-96BC-4B2A-8FF8-DE70734C209F} = {86BA9839-76FE-4295-A6F5-8406EF01F628}
+		{7CDEF322-3FB6-4D59-A676-4A8CC5D38248} = {86BA9839-76FE-4295-A6F5-8406EF01F628}
+		{8F9A3365-E5AE-43B3-AE1B-E520CE5FFCAF} = {86BA9839-76FE-4295-A6F5-8406EF01F628}
+		{8B70653A-88F0-4DD2-A5E2-5B3B9C42396B} = {86BA9839-76FE-4295-A6F5-8406EF01F628}
+		{FD74022B-5CE2-47A5-9FD1-9D646A1ECE67} = {229EAF4F-CEF5-4D72-8B01-340AFC2502F5}
+		{D565C98C-2936-4CCE-BFB9-AE910BB85EAC} = {FD74022B-5CE2-47A5-9FD1-9D646A1ECE67}
+		{19E6FD29-CDFB-4781-BFDF-9ECA4E67A888} = {FD74022B-5CE2-47A5-9FD1-9D646A1ECE67}
+		{8441C28B-7E79-485A-B53A-FBE0E7133320} = {FD74022B-5CE2-47A5-9FD1-9D646A1ECE67}
+		{1995A18B-0013-4230-BC1F-DDB823E72DA9} = {FD74022B-5CE2-47A5-9FD1-9D646A1ECE67}
+	EndGlobalSection
+EndGlobal

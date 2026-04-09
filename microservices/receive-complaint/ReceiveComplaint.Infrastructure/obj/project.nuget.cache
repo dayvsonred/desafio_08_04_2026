@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "dgSpecHash": "Cdo8rz/LaRxfNTxJHoNpYOoA0QBYTEMrAzWKRElnvmk+mrqXsNY1O8J2H+GeraOcN4mc6Z0/5ZfkCI4k4u2ykw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\niore\\Documents\\desafio\\desafio_08_04_2026\\microservices\\receive-complaint\\ReceiveComplaint.Infrastructure\\ReceiveComplaint.Infrastructure.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\niore\\.nuget\\packages\\awssdk.bedrockruntime\\3.7.403\\awssdk.bedrockruntime.3.7.403.nupkg.sha512",
+    "C:\\Users\\niore\\.nuget\\packages\\awssdk.core\\3.7.402.4\\awssdk.core.3.7.402.4.nupkg.sha512",
+    "C:\\Users\\niore\\.nuget\\packages\\awssdk.dynamodbv2\\3.7.402\\awssdk.dynamodbv2.3.7.402.nupkg.sha512",
+    "C:\\Users\\niore\\.nuget\\packages\\awssdk.sqs\\3.7.400.98\\awssdk.sqs.3.7.400.98.nupkg.sha512",
+    "C:\\Users\\niore\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.1\\microsoft.extensions.dependencyinjection.abstractions.8.0.1.nupkg.sha512",
+    "C:\\Users\\niore\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.1\\microsoft.extensions.logging.abstractions.8.0.1.nupkg.sha512",
+    "C:\\Users\\niore\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
+    "C:\\Users\\niore\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

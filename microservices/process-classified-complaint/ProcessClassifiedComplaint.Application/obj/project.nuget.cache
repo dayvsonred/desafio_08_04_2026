@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "iHRj6cwnPiGenlO9CAz2dv98qWVUnPjb9WugxExn7RHmGvqnxfC4Iws5EssTClAYFHHSvHQKZj9+CEl+pr896g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\niore\\Documents\\desafio\\desafio_08_04_2026\\microservices\\process-classified-complaint\\ProcessClassifiedComplaint.Application\\ProcessClassifiedComplaint.Application.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\niore\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.1\\microsoft.extensions.dependencyinjection.abstractions.8.0.1.nupkg.sha512",
+    "C:\\Users\\niore\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.1\\microsoft.extensions.logging.abstractions.8.0.1.nupkg.sha512",
+    "C:\\Users\\niore\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
+    "C:\\Users\\niore\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

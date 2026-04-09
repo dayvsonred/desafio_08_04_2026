@@ -1,0 +1,18 @@
+{
+  "Records": [
+    {
+      "messageId": "c5db4a80-9c3b-4f1c-b466-1c6f10cb379d",
+      "receiptHandle": "AQEB...",
+      "body": "{\"complaintId\":\"123\",\"correlationId\":\"123\",\"eventType\":\"COMPLAINT_CLASSIFIED\",\"createdAtUtc\":\"2026-04-09T17:36:30.0000000Z\"}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "1712670990000"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "f9e8d7c6b5a4",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:us-east-1:123456789012:complaint-processing-queue",
+      "awsRegion": "us-east-1"
+    }
+  ]
+}

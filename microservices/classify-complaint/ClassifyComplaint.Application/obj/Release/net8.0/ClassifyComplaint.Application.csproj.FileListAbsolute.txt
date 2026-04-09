@@ -1,0 +1,16 @@
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\bin\Release\net8.0\ClassifyComplaint.Application.deps.json
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\bin\Release\net8.0\ClassifyComplaint.Application.dll
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\bin\Release\net8.0\ClassifyComplaint.Application.pdb
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\bin\Release\net8.0\ClassifyComplaint.Domain.dll
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\bin\Release\net8.0\ClassifyComplaint.Domain.pdb
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\obj\Release\net8.0\ClassifyComplaint.Application.csproj.AssemblyReference.cache
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\obj\Release\net8.0\ClassifyComplaint.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\obj\Release\net8.0\ClassifyComplaint.Application.AssemblyInfoInputs.cache
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\obj\Release\net8.0\ClassifyComplaint.Application.AssemblyInfo.cs
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\obj\Release\net8.0\ClassifyComplaint.Application.csproj.CoreCompileInputs.cache
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\obj\Release\net8.0\ClassifyComplaint.Application.sourcelink.json
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\obj\Release\net8.0\Classify.E7724137.Up2Date
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\obj\Release\net8.0\ClassifyComplaint.Application.dll
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\obj\Release\net8.0\refint\ClassifyComplaint.Application.dll
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\obj\Release\net8.0\ClassifyComplaint.Application.pdb
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\classify-complaint\ClassifyComplaint.Application\obj\Release\net8.0\ref\ClassifyComplaint.Application.dll

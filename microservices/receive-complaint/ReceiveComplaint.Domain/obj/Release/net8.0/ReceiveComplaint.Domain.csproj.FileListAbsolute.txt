@@ -1,0 +1,12 @@
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\receive-complaint\ReceiveComplaint.Domain\bin\Release\net8.0\ReceiveComplaint.Domain.deps.json
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\receive-complaint\ReceiveComplaint.Domain\bin\Release\net8.0\ReceiveComplaint.Domain.dll
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\receive-complaint\ReceiveComplaint.Domain\bin\Release\net8.0\ReceiveComplaint.Domain.pdb
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\receive-complaint\ReceiveComplaint.Domain\obj\Release\net8.0\ReceiveComplaint.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\receive-complaint\ReceiveComplaint.Domain\obj\Release\net8.0\ReceiveComplaint.Domain.AssemblyInfoInputs.cache
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\receive-complaint\ReceiveComplaint.Domain\obj\Release\net8.0\ReceiveComplaint.Domain.AssemblyInfo.cs
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\receive-complaint\ReceiveComplaint.Domain\obj\Release\net8.0\ReceiveComplaint.Domain.csproj.CoreCompileInputs.cache
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\receive-complaint\ReceiveComplaint.Domain\obj\Release\net8.0\ReceiveComplaint.Domain.sourcelink.json
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\receive-complaint\ReceiveComplaint.Domain\obj\Release\net8.0\ReceiveComplaint.Domain.dll
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\receive-complaint\ReceiveComplaint.Domain\obj\Release\net8.0\refint\ReceiveComplaint.Domain.dll
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\receive-complaint\ReceiveComplaint.Domain\obj\Release\net8.0\ReceiveComplaint.Domain.pdb
+C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\receive-complaint\ReceiveComplaint.Domain\obj\Release\net8.0\ref\ReceiveComplaint.Domain.dll

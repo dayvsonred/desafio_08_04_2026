@@ -1,0 +1,15 @@
+{
+  "Information": [
+    "Default settings file for Lambda deployment",
+    "Update function-name and region before deploy"
+  ],
+  "profile": "default",
+  "region": "us-east-1",
+  "configuration": "Release",
+  "framework": "net8.0",
+  "function-runtime": "dotnet8",
+  "function-handler": "ReceiveComplaint.Function::ReceiveComplaint.Function.Function::FunctionHandler",
+  "function-name": "receive-complaint",
+  "function-memory-size": 512,
+  "function-timeout": 30
+}

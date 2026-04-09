@@ -1,0 +1,195 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "ClassifyComplaint.Infrastructure/1.0.0": {
+        "dependencies": {
+          "AWSSDK.BedrockRuntime": "3.7.403",
+          "AWSSDK.DynamoDBv2": "3.7.402",
+          "AWSSDK.SQS": "3.7.400.98",
+          "ClassifyComplaint.Application": "1.0.0",
+          "ClassifyComplaint.Domain": "1.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.1",
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.1",
+          "Microsoft.Extensions.Options": "8.0.2"
+        },
+        "runtime": {
+          "ClassifyComplaint.Infrastructure.dll": {}
+        }
+      },
+      "AWSSDK.BedrockRuntime/3.7.403": {
+        "dependencies": {
+          "AWSSDK.Core": "3.7.402.4"
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.BedrockRuntime.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.7.403.0"
+          }
+        }
+      },
+      "AWSSDK.Core/3.7.402.4": {
+        "runtime": {
+          "lib/net8.0/AWSSDK.Core.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.7.402.4"
+          }
+        }
+      },
+      "AWSSDK.DynamoDBv2/3.7.402": {
+        "dependencies": {
+          "AWSSDK.Core": "3.7.402.4"
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.DynamoDBv2.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.7.402.0"
+          }
+        }
+      },
+      "AWSSDK.SQS/3.7.400.98": {
+        "dependencies": {
+          "AWSSDK.Core": "3.7.402.4"
+        },
+        "runtime": {
+          "lib/net8.0/AWSSDK.SQS.dll": {
+            "assemblyVersion": "3.3.0.0",
+            "fileVersion": "3.7.400.98"
+          }
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.1": {
+        "runtime": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.324.11423"
+          }
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/8.0.1": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.1"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.324.11423"
+          }
+        }
+      },
+      "Microsoft.Extensions.Options/8.0.2": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.1",
+          "Microsoft.Extensions.Primitives": "8.0.0"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Extensions.Options.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.224.6711"
+          }
+        }
+      },
+      "Microsoft.Extensions.Primitives/8.0.0": {
+        "runtime": {
+          "lib/net8.0/Microsoft.Extensions.Primitives.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        }
+      },
+      "ClassifyComplaint.Application/1.0.0": {
+        "dependencies": {
+          "ClassifyComplaint.Domain": "1.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.1",
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.1",
+          "Microsoft.Extensions.Options": "8.0.2"
+        },
+        "runtime": {
+          "ClassifyComplaint.Application.dll": {}
+        }
+      },
+      "ClassifyComplaint.Domain/1.0.0": {
+        "runtime": {
+          "ClassifyComplaint.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ClassifyComplaint.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AWSSDK.BedrockRuntime/3.7.403": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-wjRRURMwqUlDRSJFsoDi0ZIQNa3c2cbodZbATpFVC+LcoJCYG42g6EnJDE1i/krI3tCVvSX+zdowCg9lisVFvA==",
+      "path": "awssdk.bedrockruntime/3.7.403",
+      "hashPath": "awssdk.bedrockruntime.3.7.403.nupkg.sha512"
+    },
+    "AWSSDK.Core/3.7.402.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tiMLQ3maWQe88Dsvwz2cid+C4Nd5pjjJHY6flP2nuZT6vMypVZkDYM1c2SOJyVec7AXDY2EEde68Gqu3L331WA==",
+      "path": "awssdk.core/3.7.402.4",
+      "hashPath": "awssdk.core.3.7.402.4.nupkg.sha512"
+    },
+    "AWSSDK.DynamoDBv2/3.7.402": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-SKnK39hRcM5ksZiF6qoJyNeO8YSLjmbgrkvEF3YLOw2psaJVeXUu64CAFgoAvaz7mhO+etYslFA5x8y/N1QDuQ==",
+      "path": "awssdk.dynamodbv2/3.7.402",
+      "hashPath": "awssdk.dynamodbv2.3.7.402.nupkg.sha512"
+    },
+    "AWSSDK.SQS/3.7.400.98": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1Zvajq/DPwuqqN4RGvaaeko9vphtwb/xVAUePke+/R7INYLx1ggLHh4GZVxkLFaHLdZErM+xJBTTIunZ44k+NA==",
+      "path": "awssdk.sqs/3.7.400.98",
+      "hashPath": "awssdk.sqs.3.7.400.98.nupkg.sha512"
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fGLiCRLMYd00JYpClraLjJTNKLmMJPnqxMaiRzEBIIvevlzxz33mXy39Lkd48hu1G+N21S7QpaO5ZzKsI6FRuA==",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/8.0.1",
+      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.8.0.1.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Logging.Abstractions/8.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-RIFgaqoaINxkM2KTOw72dmilDmTrYA0ns2KW4lDz4gZ2+o6IQ894CzmdL3StM2oh7QQq44nCWiqKqc4qUI9Jmg==",
+      "path": "microsoft.extensions.logging.abstractions/8.0.1",
+      "hashPath": "microsoft.extensions.logging.abstractions.8.0.1.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Options/8.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dWGKvhFybsaZpGmzkGCbNNwBD1rVlWzrZKANLW/CcbFJpCEceMCGzT7zZwHOGBCbwM0SzBuceMj5HN1LKV1QqA==",
+      "path": "microsoft.extensions.options/8.0.2",
+      "hashPath": "microsoft.extensions.options.8.0.2.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Primitives/8.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bXJEZrW9ny8vjMF1JV253WeLhpEVzFo1lyaZu1vQ4ZxWUlVvknZ/+ftFgVheLubb4eZPSwwxBeqS1JkCOjxd8g==",
+      "path": "microsoft.extensions.primitives/8.0.0",
+      "hashPath": "microsoft.extensions.primitives.8.0.0.nupkg.sha512"
+    },
+    "ClassifyComplaint.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ClassifyComplaint.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

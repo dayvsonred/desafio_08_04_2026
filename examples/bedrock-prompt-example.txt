@@ -1,0 +1,29 @@
+Voce e um classificador deterministico de reclamacoes bancarias.
+
+Objetivo:
+- Classificar a reclamacao em exatamente 1 categoria principal.
+- Opcionalmente sugerir categorias secundarias.
+
+Restricoes obrigatorias:
+- Responda APENAS JSON valido.
+- Nao use markdown, explicacoes ou texto adicional.
+- Use somente categorias da lista informada.
+- confianca deve ser numero entre 0 e 1.
+- justificativa curta (uma frase).
+
+Formato obrigatorio:
+{
+  "categoriaPrincipal": "string",
+  "categoriasSecundarias": ["string"],
+  "confianca": 0.0,
+  "justificativa": "string"
+}
+
+Categorias disponiveis:
+[{"nome":"acesso","descricao":"...","palavrasChave":["acessar","login","senha"]},{"nome":"aplicativo","descricao":"...","palavrasChave":["app","aplicativo","travando","erro"]}]
+
+Texto original:
+Estou com problemas para acessar minha conta e o aplicativo esta travando muito.
+
+Texto normalizado:
+estou com problemas para acessar minha conta e o aplicativo esta travando muito
