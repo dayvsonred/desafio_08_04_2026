@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{4CE1E263-2CC1-48E7-A5D8-4D54D8CA843C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComplaintClassifier.UnitTests", "tests\ComplaintClassifier.UnitTests\ComplaintClassifier.UnitTests.csproj", "{D211B25B-B2C2-4836-B044-B7591248A8A6}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "microservices", "microservices", "{229EAF4F-CEF5-4D72-8B01-340AFC2502F5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "receive-complaint", "receive-complaint", "{90C7E8F3-C8C5-4F69-B3A5-7095AED3E5E3}"
@@ -39,6 +35,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessClassifiedComplaint.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessClassifiedComplaint.Function", "microservices\process-classified-complaint\ProcessClassifiedComplaint.Function\ProcessClassifiedComplaint.Function.csproj", "{1995A18B-0013-4230-BC1F-DDB823E72DA9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F9B35182-2FDE-42AF-B5FE-88F6CE1A1DA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassifyComplaint.UnitTests", "microservices\classify-complaint\tests\ClassifyComplaint.UnitTests\ClassifyComplaint.UnitTests.csproj", "{D8018465-181C-45F2-A407-6DBF50CCA5F6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E26C53DA-EFAF-4F99-A40E-0155D1642E72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReceiveComplaint.UnitTests", "microservices\receive-complaint\tests\ReceiveComplaint.UnitTests\ReceiveComplaint.UnitTests.csproj", "{0EE7EF5F-5B02-4248-91C2-99627D4C1547}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{45331BE6-A158-4389-89D7-460A02F9F893}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessClassifiedComplaint.UnitTests", "microservices\process-classified-complaint\tests\ProcessClassifiedComplaint.UnitTests\ProcessClassifiedComplaint.UnitTests.csproj", "{5C48C647-9335-468B-BAFE-B591AB671717}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,10 +56,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D211B25B-B2C2-4836-B044-B7591248A8A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D211B25B-B2C2-4836-B044-B7591248A8A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D211B25B-B2C2-4836-B044-B7591248A8A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D211B25B-B2C2-4836-B044-B7591248A8A6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1374C3C3-486A-4776-BF52-4ED6F3891479}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1374C3C3-486A-4776-BF52-4ED6F3891479}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1374C3C3-486A-4776-BF52-4ED6F3891479}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -100,9 +104,20 @@ Global
 		{1995A18B-0013-4230-BC1F-DDB823E72DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1995A18B-0013-4230-BC1F-DDB823E72DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1995A18B-0013-4230-BC1F-DDB823E72DA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8018465-181C-45F2-A407-6DBF50CCA5F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8018465-181C-45F2-A407-6DBF50CCA5F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8018465-181C-45F2-A407-6DBF50CCA5F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8018465-181C-45F2-A407-6DBF50CCA5F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EE7EF5F-5B02-4248-91C2-99627D4C1547}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EE7EF5F-5B02-4248-91C2-99627D4C1547}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EE7EF5F-5B02-4248-91C2-99627D4C1547}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EE7EF5F-5B02-4248-91C2-99627D4C1547}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C48C647-9335-468B-BAFE-B591AB671717}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C48C647-9335-468B-BAFE-B591AB671717}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C48C647-9335-468B-BAFE-B591AB671717}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C48C647-9335-468B-BAFE-B591AB671717}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{D211B25B-B2C2-4836-B044-B7591248A8A6} = {4CE1E263-2CC1-48E7-A5D8-4D54D8CA843C}
 		{90C7E8F3-C8C5-4F69-B3A5-7095AED3E5E3} = {229EAF4F-CEF5-4D72-8B01-340AFC2502F5}
 		{1374C3C3-486A-4776-BF52-4ED6F3891479} = {90C7E8F3-C8C5-4F69-B3A5-7095AED3E5E3}
 		{7F4844AC-61B0-4270-9A08-4CFBE3120DEB} = {90C7E8F3-C8C5-4F69-B3A5-7095AED3E5E3}
@@ -118,5 +133,11 @@ Global
 		{19E6FD29-CDFB-4781-BFDF-9ECA4E67A888} = {FD74022B-5CE2-47A5-9FD1-9D646A1ECE67}
 		{8441C28B-7E79-485A-B53A-FBE0E7133320} = {FD74022B-5CE2-47A5-9FD1-9D646A1ECE67}
 		{1995A18B-0013-4230-BC1F-DDB823E72DA9} = {FD74022B-5CE2-47A5-9FD1-9D646A1ECE67}
+		{F9B35182-2FDE-42AF-B5FE-88F6CE1A1DA4} = {86BA9839-76FE-4295-A6F5-8406EF01F628}
+		{D8018465-181C-45F2-A407-6DBF50CCA5F6} = {F9B35182-2FDE-42AF-B5FE-88F6CE1A1DA4}
+		{E26C53DA-EFAF-4F99-A40E-0155D1642E72} = {90C7E8F3-C8C5-4F69-B3A5-7095AED3E5E3}
+		{0EE7EF5F-5B02-4248-91C2-99627D4C1547} = {E26C53DA-EFAF-4F99-A40E-0155D1642E72}
+		{45331BE6-A158-4389-89D7-460A02F9F893} = {FD74022B-5CE2-47A5-9FD1-9D646A1ECE67}
+		{5C48C647-9335-468B-BAFE-B591AB671717} = {45331BE6-A158-4389-89D7-460A02F9F893}
 	EndGlobalSection
 EndGlobal

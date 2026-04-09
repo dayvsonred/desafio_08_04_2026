@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ReceiveComplaint.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+64f5890ec1875eb27f3f601144e7a472e9c2bd0d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6cd0706aecec514779770255be0136a44f406cc0")]
 [assembly: System.Reflection.AssemblyProductAttribute("ReceiveComplaint.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ReceiveComplaint.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
