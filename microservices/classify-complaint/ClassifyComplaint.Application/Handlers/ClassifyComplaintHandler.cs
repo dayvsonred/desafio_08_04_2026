@@ -17,6 +17,7 @@ public sealed class ClassifyComplaintHandler
     private readonly ICategoryRepository _categoryRepository;
     private readonly IClassificationOrchestrator _classificationOrchestrator;
     private readonly ITextNormalizer _textNormalizer;
+    private readonly IComplaintMessageStorage _messageStorage;
     private readonly IQueuePublisher _queuePublisher;
     private readonly IClock _clock;
     private readonly ILogger<ClassifyComplaintHandler> _logger;
@@ -26,6 +27,7 @@ public sealed class ClassifyComplaintHandler
         ICategoryRepository categoryRepository,
         IClassificationOrchestrator classificationOrchestrator,
         ITextNormalizer textNormalizer,
+        IComplaintMessageStorage messageStorage,
         IQueuePublisher queuePublisher,
         IClock clock,
         ILogger<ClassifyComplaintHandler> logger)
@@ -34,6 +36,7 @@ public sealed class ClassifyComplaintHandler
         _categoryRepository = categoryRepository;
         _classificationOrchestrator = classificationOrchestrator;
         _textNormalizer = textNormalizer;
+        _messageStorage = messageStorage;
         _queuePublisher = queuePublisher;
         _clock = clock;
         _logger = logger;
@@ -68,7 +71,13 @@ public sealed class ClassifyComplaintHandler
 
         try
         {
-            var normalizedMessage = _textNormalizer.Normalize(complaint.Message);
+            if (string.IsNullOrWhiteSpace(complaint.MessageReceivedS3Key))
+            {
+                throw new InvalidOperationException($"Reclamacao sem caminho da mensagem no S3: {complaintId}");
+            }
+
+            var message = await _messageStorage.LoadReceivedMessageAsync(complaint.MessageReceivedS3Key, cancellationToken);
+            var normalizedMessage = _textNormalizer.Normalize(message);
             var categories = await _categoryRepository.GetAllAsync(cancellationToken);
 
             if (categories.Count == 0)
@@ -77,7 +86,7 @@ public sealed class ClassifyComplaintHandler
             }
 
             var classificationOutcome = await _classificationOrchestrator.ClassifyAsync(
-                complaint.Message,
+                message,
                 normalizedMessage,
                 categories,
                 cancellationToken);

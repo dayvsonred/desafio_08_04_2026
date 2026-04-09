@@ -81,6 +81,13 @@ resource "aws_iam_role_policy" "lambda_policy" {
       {
         Effect = "Allow"
         Action = [
+          "s3:GetObject"
+        ]
+        Resource = "arn:aws:s3:::${var.messages_bucket_name}/complaint_message_received/*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
           "bedrock:InvokeModel"
         ]
         Resource = "*"
@@ -106,6 +113,7 @@ resource "aws_lambda_function" "classify_complaint" {
       AwsResources__CategoriesTableName      = var.categories_table_name
       AwsResources__ClassificationQueueUrl   = var.classification_queue_url
       AwsResources__ProcessingQueueUrl       = var.processing_queue_url
+      AwsResources__MessagesBucketName       = var.messages_bucket_name
       AwsResources__BedrockModelId           = var.bedrock_model_id
       Classification__MinimumWinningScore    = "2"
       Classification__MinimumScoreGap        = "1"
@@ -117,8 +125,8 @@ resource "aws_lambda_function" "classify_complaint" {
 }
 
 resource "aws_lambda_event_source_mapping" "classification_queue_mapping" {
-  event_source_arn       = var.classification_queue_arn
-  function_name          = aws_lambda_function.classify_complaint.arn
-  batch_size             = 10
+  event_source_arn        = var.classification_queue_arn
+  function_name           = aws_lambda_function.classify_complaint.arn
+  batch_size              = 10
   function_response_types = ["ReportBatchItemFailures"]
 }

@@ -24,3 +24,5 @@ terraform apply
 
 Use esses outputs nos módulos das Lambdas.
 
+## Exemplo de dados salvos
+- `dynamodb-items-examples.json`

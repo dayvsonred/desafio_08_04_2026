@@ -8,5 +8,6 @@ public sealed class AwsResourceOptions
     public string CategoriesTableName { get; init; } = "categories";
     public string ClassificationQueueUrl { get; init; } = string.Empty;
     public string ProcessingQueueUrl { get; init; } = string.Empty;
+    public string MessagesBucketName { get; init; } = "itau_desafio_2026";
     public string BedrockModelId { get; init; } = "anthropic.claude-3-haiku-20240307-v1:0";
 }

@@ -68,7 +68,11 @@ public sealed class ClassifyComplaintHandler
 
         try
         {
-            var normalizedMessage = _textNormalizer.Normalize(complaint.Message);
+            var complaintMessage = string.IsNullOrWhiteSpace(complaint.Message)
+                ? throw new InvalidOperationException($"Reclamacao sem mensagem para classificacao: {complaintId}")
+                : complaint.Message;
+
+            var normalizedMessage = _textNormalizer.Normalize(complaintMessage);
             var categories = await _categoryRepository.GetAllAsync(cancellationToken);
 
             if (categories.Count == 0)
@@ -77,7 +81,7 @@ public sealed class ClassifyComplaintHandler
             }
 
             var classificationOutcome = await _classificationOrchestrator.ClassifyAsync(
-                complaint.Message,
+                complaintMessage,
                 normalizedMessage,
                 categories,
                 cancellationToken);

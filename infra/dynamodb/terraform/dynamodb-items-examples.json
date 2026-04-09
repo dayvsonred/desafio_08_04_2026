@@ -1,0 +1,149 @@
+{
+  "notes": {
+    "complaintsTable": "Item principal por reclamacao (PK=COMPLAINT#<id>, SK=METADATA)",
+    "categoriesTable": "Categoria pre-cadastrada (PK=CATEGORY#<nome>, SK=METADATA)"
+  },
+  "complaints": {
+    "keys": {
+      "partitionKey": "PK",
+      "sortKey": "SK"
+    },
+    "examples": [
+      {
+        "scenario": "RECEIVED",
+        "item": {
+          "PK": "COMPLAINT#cmp-20260409-0001",
+          "SK": "METADATA",
+          "complaintId": "cmp-20260409-0001",
+          "messageReceivedS3Key": "complaint_message_received/20260409/cmp-20260409-0001.json",
+          "status": "RECEIVED",
+          "createdAt": "2026-04-09T18:00:00.0000000Z",
+          "updatedAt": "2026-04-09T18:00:00.0000000Z"
+        }
+      },
+      {
+        "scenario": "CLASSIFIED",
+        "item": {
+          "PK": "COMPLAINT#cmp-20260409-0001",
+          "SK": "METADATA",
+          "complaintId": "cmp-20260409-0001",
+          "messageReceivedS3Key": "complaint_message_received/20260409/cmp-20260409-0001.json",
+          "normalizedMessage": "estou com problemas para acessar minha conta e o aplicativo esta travando muito",
+          "status": "CLASSIFIED",
+          "classification": {
+            "primaryCategory": "aplicativo",
+            "secondaryCategories": [
+              "acesso"
+            ],
+            "confidence": 0.91,
+            "decisionSource": "RULES",
+            "justification": "A reclamacao menciona travamento do aplicativo e dificuldade de acesso.",
+            "scoreBreakdown": [
+              {
+                "category": "aplicativo",
+                "score": 2,
+                "matchedKeywords": [
+                  "aplicativo",
+                  "travando"
+                ]
+              },
+              {
+                "category": "acesso",
+                "score": 1,
+                "matchedKeywords": [
+                  "acessar"
+                ]
+              }
+            ]
+          },
+          "createdAt": "2026-04-09T18:00:00.0000000Z",
+          "updatedAt": "2026-04-09T18:00:12.0000000Z"
+        }
+      },
+      {
+        "scenario": "PROCESSED",
+        "item": {
+          "PK": "COMPLAINT#cmp-20260409-0001",
+          "SK": "METADATA",
+          "complaintId": "cmp-20260409-0001",
+          "messageReceivedS3Key": "complaint_message_received/20260409/cmp-20260409-0001.json",
+          "messageProcessedS3Key": "complaint_message_processed/20260409/cmp-20260409-0001_6c8d6a57-1f2f-4a72-8bd8-7c3e4a0d0d6f.json",
+          "normalizedMessage": "estou com problemas para acessar minha conta e o aplicativo esta travando muito",
+          "status": "PROCESSED",
+          "classification": {
+            "primaryCategory": "aplicativo",
+            "secondaryCategories": [
+              "acesso"
+            ],
+            "confidence": 0.91,
+            "decisionSource": "RULES",
+            "justification": "A reclamacao menciona travamento do aplicativo e dificuldade de acesso.",
+            "scoreBreakdown": [
+              {
+                "category": "aplicativo",
+                "score": 2,
+                "matchedKeywords": [
+                  "aplicativo",
+                  "travando"
+                ]
+              },
+              {
+                "category": "acesso",
+                "score": 1,
+                "matchedKeywords": [
+                  "acessar"
+                ]
+              }
+            ]
+          },
+          "createdAt": "2026-04-09T18:00:00.0000000Z",
+          "updatedAt": "2026-04-09T18:00:35.0000000Z"
+        }
+      },
+      {
+        "scenario": "CLASSIFICATION_FAILED",
+        "item": {
+          "PK": "COMPLAINT#cmp-20260409-0099",
+          "SK": "METADATA",
+          "complaintId": "cmp-20260409-0099",
+          "messageReceivedS3Key": "complaint_message_received/20260409/cmp-20260409-0099.json",
+          "status": "CLASSIFICATION_FAILED",
+          "error": "Nenhuma categoria cadastrada no DynamoDB.",
+          "createdAt": "2026-04-09T18:10:00.0000000Z",
+          "updatedAt": "2026-04-09T18:10:05.0000000Z"
+        }
+      }
+    ]
+  },
+  "categories": {
+    "keys": {
+      "partitionKey": "PK",
+      "sortKey": "SK"
+    },
+    "examples": [
+      {
+        "PK": "CATEGORY#aplicativo",
+        "SK": "METADATA",
+        "name": "aplicativo",
+        "keywords": [
+          "app",
+          "aplicativo",
+          "travando",
+          "erro"
+        ],
+        "description": "Falhas tecnicas no app, travamentos e instabilidade."
+      },
+      {
+        "PK": "CATEGORY#acesso",
+        "SK": "METADATA",
+        "name": "acesso",
+        "keywords": [
+          "acessar",
+          "login",
+          "senha"
+        ],
+        "description": "Problemas para entrar na conta e autenticar."
+      }
+    ]
+  }
+}

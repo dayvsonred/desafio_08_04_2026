@@ -6,6 +6,7 @@
 ## Pre-requisitos
 - Tabelas DynamoDB aplicadas
 - Filas SQS aplicadas
+- Bucket S3 existente: `itau_desafio_2026`
 - Zip da Lambda gerado (`lambda_zip_path`)
 
 ## Uso (PowerShell)
@@ -24,7 +25,8 @@ terraform plan `
   -var "categories_table_name=<CATEGORIES_TABLE_NAME>" `
   -var "classification_queue_url=<CLASSIFICATION_QUEUE_URL>" `
   -var "classification_queue_arn=<CLASSIFICATION_QUEUE_ARN>" `
-  -var "processing_queue_url=<PROCESSING_QUEUE_URL>"
+  -var "processing_queue_url=<PROCESSING_QUEUE_URL>" `
+  -var "messages_bucket_name=itau_desafio_2026"
 terraform apply `
   -var "lambda_zip_path=<PATH_ZIP>" `
   -var "complaints_table_name=<COMPLAINTS_TABLE_NAME>" `
@@ -32,10 +34,10 @@ terraform apply `
   -var "categories_table_name=<CATEGORIES_TABLE_NAME>" `
   -var "classification_queue_url=<CLASSIFICATION_QUEUE_URL>" `
   -var "classification_queue_arn=<CLASSIFICATION_QUEUE_ARN>" `
-  -var "processing_queue_url=<PROCESSING_QUEUE_URL>"
+  -var "processing_queue_url=<PROCESSING_QUEUE_URL>" `
+  -var "messages_bucket_name=itau_desafio_2026"
 ```
 
 ## Outputs importantes
 - `lambda_name`
 - `lambda_invoke_arn`
-

@@ -42,7 +42,7 @@ public sealed class Function
                 var payload = JsonSerializer.Deserialize<QueueMessage>(record.Body, JsonSerializerOptions)
                     ?? throw new InvalidOperationException("Mensagem SQS vazia para processamento.");
 
-                await _handler.HandleAsync(payload.ComplaintId, payload.CorrelationId, CancellationToken.None);
+                await _handler.HandleAsync(payload.ComplaintId, payload.CorrelationId, record.MessageId, CancellationToken.None);
             }
             catch (Exception exception)
             {

@@ -21,6 +21,11 @@ public interface IComplaintRepository
         ComplaintStatus status,
         DateTime updatedAtUtc,
         CancellationToken cancellationToken);
+    Task SetProcessedMessagePathAsync(
+        string complaintId,
+        string messageProcessedS3Key,
+        DateTime updatedAtUtc,
+        CancellationToken cancellationToken);
     Task SetErrorAsync(
         string complaintId,
         ComplaintStatus failedStatus,

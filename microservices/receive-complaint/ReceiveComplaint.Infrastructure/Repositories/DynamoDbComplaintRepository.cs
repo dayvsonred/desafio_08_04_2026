@@ -29,20 +29,36 @@ public sealed class DynamoDbComplaintRepository : IComplaintRepository
 
     public async Task CreateAsync(ComplaintRecord complaint, CancellationToken cancellationToken)
     {
+        var item = new Dictionary<string, AttributeValue>
+        {
+            ["PK"] = new AttributeValue { S = BuildPk(complaint.ComplaintId) },
+            ["SK"] = new AttributeValue { S = MetadataSk },
+            ["complaintId"] = new AttributeValue { S = complaint.ComplaintId },
+            ["status"] = new AttributeValue { S = complaint.Status.ToString() },
+            ["createdAt"] = new AttributeValue { S = complaint.CreatedAtUtc.ToString("O") },
+            ["updatedAt"] = new AttributeValue { S = complaint.UpdatedAtUtc.ToString("O") }
+        };
+
+        if (!string.IsNullOrWhiteSpace(complaint.Message))
+        {
+            item["message"] = new AttributeValue { S = complaint.Message };
+        }
+
+        if (!string.IsNullOrWhiteSpace(complaint.MessageReceivedS3Key))
+        {
+            item["messageReceivedS3Key"] = new AttributeValue { S = complaint.MessageReceivedS3Key };
+        }
+
+        if (!string.IsNullOrWhiteSpace(complaint.MessageProcessedS3Key))
+        {
+            item["messageProcessedS3Key"] = new AttributeValue { S = complaint.MessageProcessedS3Key };
+        }
+
         var request = new PutItemRequest
         {
             TableName = _options.ComplaintsTableName,
             ConditionExpression = "attribute_not_exists(PK)",
-            Item = new Dictionary<string, AttributeValue>
-            {
-                ["PK"] = new AttributeValue { S = BuildPk(complaint.ComplaintId) },
-                ["SK"] = new AttributeValue { S = MetadataSk },
-                ["complaintId"] = new AttributeValue { S = complaint.ComplaintId },
-                ["message"] = new AttributeValue { S = complaint.Message },
-                ["status"] = new AttributeValue { S = complaint.Status.ToString() },
-                ["createdAt"] = new AttributeValue { S = complaint.CreatedAtUtc.ToString("O") },
-                ["updatedAt"] = new AttributeValue { S = complaint.UpdatedAtUtc.ToString("O") }
-            }
+            Item = item
         };
 
         await _dynamoDb.PutItemAsync(request, cancellationToken);
@@ -178,6 +194,30 @@ public sealed class DynamoDbComplaintRepository : IComplaintRepository
         }, cancellationToken);
     }
 
+    public async Task SetProcessedMessagePathAsync(
+        string complaintId,
+        string messageProcessedS3Key,
+        DateTime updatedAtUtc,
+        CancellationToken cancellationToken)
+    {
+        await _dynamoDb.UpdateItemAsync(new UpdateItemRequest
+        {
+            TableName = _options.ComplaintsTableName,
+            Key = BuildComplaintKey(complaintId),
+            UpdateExpression = "SET #messageProcessedS3Key = :messageProcessedS3Key, #updatedAt = :updatedAt",
+            ExpressionAttributeNames = new Dictionary<string, string>
+            {
+                ["#messageProcessedS3Key"] = "messageProcessedS3Key",
+                ["#updatedAt"] = "updatedAt"
+            },
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+            {
+                [":messageProcessedS3Key"] = new AttributeValue { S = messageProcessedS3Key },
+                [":updatedAt"] = new AttributeValue { S = updatedAtUtc.ToString("O") }
+            }
+        }, cancellationToken);
+    }
+
     public async Task SetErrorAsync(
         string complaintId,
         ComplaintStatus failedStatus,
@@ -212,7 +252,9 @@ public sealed class DynamoDbComplaintRepository : IComplaintRepository
         return new ComplaintRecord
         {
             ComplaintId = item["complaintId"].S,
-            Message = item["message"].S,
+            Message = item.TryGetValue("message", out var messageValue) ? messageValue.S : null,
+            MessageReceivedS3Key = item.TryGetValue("messageReceivedS3Key", out var messageReceivedS3Key) ? messageReceivedS3Key.S : null,
+            MessageProcessedS3Key = item.TryGetValue("messageProcessedS3Key", out var messageProcessedS3Key) ? messageProcessedS3Key.S : null,
             NormalizedMessage = item.TryGetValue("normalizedMessage", out var normalized) ? normalized.S : null,
             Status = Enum.Parse<ComplaintStatus>(item["status"].S, true),
             Classification = item.TryGetValue("classification", out var classification) && classification.M is { Count: > 0 }

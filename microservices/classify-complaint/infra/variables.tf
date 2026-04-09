@@ -44,8 +44,12 @@ variable "processing_queue_arn" {
   type = string
 }
 
+variable "messages_bucket_name" {
+  type    = string
+  default = "itau_desafio_2026"
+}
+
 variable "bedrock_model_id" {
   type    = string
   default = "anthropic.claude-3-haiku-20240307-v1:0"
 }
-

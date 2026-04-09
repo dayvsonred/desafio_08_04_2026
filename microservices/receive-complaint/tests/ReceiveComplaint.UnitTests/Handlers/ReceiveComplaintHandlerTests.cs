@@ -14,10 +14,13 @@ public sealed class ReceiveComplaintHandlerTests
     {
         var repository = new FakeComplaintRepository();
         var queuePublisher = new FakeQueuePublisher();
+        var storage = new FakeComplaintMessageStorage();
+
         var handler = new ReceiveComplaintHandler(
             repository,
             queuePublisher,
             new FakeComplaintIdGenerator("cmp-1"),
+            storage,
             new FixedClock(new DateTime(2026, 4, 9, 12, 0, 0, DateTimeKind.Utc)),
             NullLogger<ReceiveComplaintHandler>.Instance);
 
@@ -29,11 +32,14 @@ public sealed class ReceiveComplaintHandlerTests
     {
         var repository = new FakeComplaintRepository();
         var queuePublisher = new FakeQueuePublisher();
+        var storage = new FakeComplaintMessageStorage();
         var now = new DateTime(2026, 4, 9, 12, 0, 0, DateTimeKind.Utc);
+
         var handler = new ReceiveComplaintHandler(
             repository,
             queuePublisher,
             new FakeComplaintIdGenerator("cmp-123"),
+            storage,
             new FixedClock(now),
             NullLogger<ReceiveComplaintHandler>.Instance);
 
@@ -45,10 +51,13 @@ public sealed class ReceiveComplaintHandlerTests
         Assert.NotNull(repository.CreatedComplaint);
         Assert.Equal("cmp-123", repository.CreatedComplaint!.ComplaintId);
         Assert.Equal(ComplaintStatus.RECEIVED, repository.CreatedComplaint.Status);
+        Assert.Equal("complaint_message_received/20260409/cmp-123.json", repository.CreatedComplaint.MessageReceivedS3Key);
 
         Assert.NotNull(queuePublisher.ClassificationMessage);
         Assert.Equal("cmp-123", queuePublisher.ClassificationMessage!.ComplaintId);
         Assert.Equal("corr-1", queuePublisher.ClassificationMessage.CorrelationId);
+
+        Assert.Equal("Mensagem de reclamacao", storage.StoredMessage);
     }
 
     private sealed class FakeComplaintRepository : IComplaintRepository
@@ -70,6 +79,9 @@ public sealed class ReceiveComplaintHandlerTests
         public Task UpdateClassificationAsync(string complaintId, string normalizedMessage, ClassificationResult classification, ComplaintStatus status, DateTime updatedAtUtc, CancellationToken cancellationToken)
             => Task.CompletedTask;
 
+        public Task SetProcessedMessagePathAsync(string complaintId, string messageProcessedS3Key, DateTime updatedAtUtc, CancellationToken cancellationToken)
+            => Task.CompletedTask;
+
         public Task SetErrorAsync(string complaintId, ComplaintStatus failedStatus, string error, DateTime updatedAtUtc, CancellationToken cancellationToken)
             => Task.CompletedTask;
     }
@@ -86,6 +98,23 @@ public sealed class ReceiveComplaintHandlerTests
 
         public Task PublishProcessingRequestedAsync(QueueMessage message, CancellationToken cancellationToken)
             => Task.CompletedTask;
+    }
+
+    private sealed class FakeComplaintMessageStorage : IComplaintMessageStorage
+    {
+        public string? StoredMessage { get; private set; }
+
+        public Task<string> SaveReceivedMessageAsync(string complaintId, string correlationId, string message, DateTime receivedAtUtc, CancellationToken cancellationToken)
+        {
+            StoredMessage = message;
+            return Task.FromResult($"complaint_message_received/{receivedAtUtc:yyyyMMdd}/{complaintId}.json");
+        }
+
+        public Task<string> LoadReceivedMessageAsync(string messageReceivedS3Key, CancellationToken cancellationToken)
+            => Task.FromResult(string.Empty);
+
+        public Task<string> SaveProcessedMessageAsync(string complaintId, string correlationId, string message, ClassificationResult classification, string? messageId, DateTime processedAtUtc, CancellationToken cancellationToken)
+            => Task.FromResult(string.Empty);
     }
 
     private sealed class FakeComplaintIdGenerator : IComplaintIdGenerator

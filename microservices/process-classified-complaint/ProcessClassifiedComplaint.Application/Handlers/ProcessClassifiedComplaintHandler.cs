@@ -18,20 +18,23 @@ public sealed class ProcessClassifiedComplaintHandler
     ];
 
     private readonly IComplaintRepository _complaintRepository;
+    private readonly IComplaintMessageStorage _messageStorage;
     private readonly IClock _clock;
     private readonly ILogger<ProcessClassifiedComplaintHandler> _logger;
 
     public ProcessClassifiedComplaintHandler(
         IComplaintRepository complaintRepository,
+        IComplaintMessageStorage messageStorage,
         IClock clock,
         ILogger<ProcessClassifiedComplaintHandler> logger)
     {
         _complaintRepository = complaintRepository;
+        _messageStorage = messageStorage;
         _clock = clock;
         _logger = logger;
     }
 
-    public async Task HandleAsync(string complaintId, string? correlationId, CancellationToken cancellationToken)
+    public async Task HandleAsync(string complaintId, string? correlationId, string? messageId, CancellationToken cancellationToken)
     {
         var effectiveCorrelationId = string.IsNullOrWhiteSpace(correlationId) ? complaintId : correlationId;
         var complaint = await _complaintRepository.GetByIdAsync(complaintId, cancellationToken)
@@ -60,7 +63,32 @@ public sealed class ProcessClassifiedComplaintHandler
 
         try
         {
-            _logger.LogInformation("Processing classified complaint. complaintId={ComplaintId} correlationId={CorrelationId}", complaintId, effectiveCorrelationId);
+            if (complaint.Classification is null)
+            {
+                throw new InvalidOperationException($"Reclamacao sem classificacao para processamento: {complaintId}");
+            }
+
+            if (string.IsNullOrWhiteSpace(complaint.MessageReceivedS3Key))
+            {
+                throw new InvalidOperationException($"Reclamacao sem caminho da mensagem no S3: {complaintId}");
+            }
+
+            var message = await _messageStorage.LoadReceivedMessageAsync(complaint.MessageReceivedS3Key, cancellationToken);
+            var processedAtUtc = _clock.UtcNow;
+            var processedS3Key = await _messageStorage.SaveProcessedMessageAsync(
+                complaintId,
+                effectiveCorrelationId,
+                message,
+                complaint.Classification,
+                messageId,
+                processedAtUtc,
+                cancellationToken);
+
+            await _complaintRepository.SetProcessedMessagePathAsync(
+                complaintId,
+                processedS3Key,
+                processedAtUtc,
+                cancellationToken);
 
             await _complaintRepository.TryUpdateStatusAsync(
                 complaintId,
@@ -70,7 +98,12 @@ public sealed class ProcessClassifiedComplaintHandler
                 null,
                 cancellationToken);
 
-            _logger.LogInformation("Complaint marked as PROCESSED. complaintId={ComplaintId} correlationId={CorrelationId}", complaintId, effectiveCorrelationId);
+            _logger.LogInformation(
+                "Complaint marked as PROCESSED. complaintId={ComplaintId} correlationId={CorrelationId} messageId={MessageId} processedS3Key={ProcessedS3Key}",
+                complaintId,
+                effectiveCorrelationId,
+                messageId,
+                processedS3Key);
         }
         catch (Exception exception)
         {
@@ -81,7 +114,7 @@ public sealed class ProcessClassifiedComplaintHandler
                 _clock.UtcNow,
                 cancellationToken);
 
-            _logger.LogError(exception, "Processing failed. complaintId={ComplaintId} correlationId={CorrelationId}", complaintId, effectiveCorrelationId);
+            _logger.LogError(exception, "Processing failed. complaintId={ComplaintId} correlationId={CorrelationId} messageId={MessageId}", complaintId, effectiveCorrelationId, messageId);
             throw;
         }
     }
