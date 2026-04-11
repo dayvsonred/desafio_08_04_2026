@@ -4,11 +4,18 @@
 `infra/api-gateway/terraform`
 
 ## Pre-requisito
-Deploy das Lambdas aplicado, com:
-- `receive_lambda_invoke_arn`
-- `receive_lambda_name`
-- `metrics_lambda_invoke_arn`
-- `metrics_lambda_name`
+Deploy das 4 Lambdas aplicado na mesma conta/regiao.
+
+As referencias de lambdas (nome e ARN) ja estao fixas no `main.tf`:
+
+1. `complaint-classifier-phase1-receive-complaint`
+   `arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-receive-complaint`
+2. `complaint-classifier-phase1-classify-complaint`
+   `arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-classify-complaint`
+3. `complaint-classifier-phase1-process-classified-complaint`
+   `arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-process-classified-complaint`
+4. `complaint-classifier-phase1-daily-complaint-metrics`
+   `arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-daily-complaint-metrics`
 
 ## Uso (PowerShell)
 ```powershell
@@ -19,18 +26,11 @@ $env:AWS_PROFILE="default"
 $env:AWS_REGION="sa-east-1"
 
 terraform init
-terraform plan `
-  -var "receive_lambda_invoke_arn=<RECEIVE_INVOKE_ARN>" `
-  -var "receive_lambda_name=<RECEIVE_FUNCTION_NAME>" `
-  -var "metrics_lambda_invoke_arn=<METRICS_INVOKE_ARN>" `
-  -var "metrics_lambda_name=<METRICS_FUNCTION_NAME>"
-terraform apply `
-  -var "receive_lambda_invoke_arn=<RECEIVE_INVOKE_ARN>" `
-  -var "receive_lambda_name=<RECEIVE_FUNCTION_NAME>" `
-  -var "metrics_lambda_invoke_arn=<METRICS_INVOKE_ARN>" `
-  -var "metrics_lambda_name=<METRICS_FUNCTION_NAME>"
+terraform plan
+terraform apply
 ```
 
 ## Outputs
 - `complaints_route`
 - `metrics_route`
+- `lambda_references`

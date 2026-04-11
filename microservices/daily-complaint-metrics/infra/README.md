@@ -26,7 +26,7 @@ $env:AWS_REGION="sa-east-1"
 # Gerar ZIP da Lambda
 dotnet lambda package --project-location "$Root\microservices\daily-complaint-metrics\DailyComplaintMetrics.Function" --configuration Release --framework net8.0 --output-package "$ZipPath"
 
-cd "$Root\microservices\daily-complaint-metrics\infra"
+cd "C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\daily-complaint-metrics\infra"
 terraform init
 terraform plan `
   -var "project_name=$ProjectName" `

@@ -73,6 +73,17 @@ Exemplos de itens:
   - `processedSuccessCount`
   - `processedErrorCount`
 
+## Lambdas fixas no API Gateway Terraform
+
+- `complaint-classifier-phase1-receive-complaint`
+  - `arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-receive-complaint`
+- `complaint-classifier-phase1-classify-complaint`
+  - `arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-classify-complaint`
+- `complaint-classifier-phase1-process-classified-complaint`
+  - `arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-process-classified-complaint`
+- `complaint-classifier-phase1-daily-complaint-metrics`
+  - `arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-daily-complaint-metrics`
+
 ## Build e testes
 
 ```bash
@@ -122,6 +133,10 @@ terraform -chdir="$Root\microservices\process-classified-complaint\infra" apply 
 # Deploy DailyComplaintMetrics
 terraform -chdir="$Root\microservices\daily-complaint-metrics\infra" init
 terraform -chdir="$Root\microservices\daily-complaint-metrics\infra" apply -auto-approve -var "project_name=$ProjectName" -var "lambda_zip_path=$Root\microservices\daily-complaint-metrics\infra\daily-complaint-metrics.zip"
+
+# Deploy API Gateway
+terraform -chdir="$Root\infra\api-gateway\terraform" init
+terraform -chdir="$Root\infra\api-gateway\terraform" apply -auto-approve
 ```
 
 ## Terraform (ordem sugerida)

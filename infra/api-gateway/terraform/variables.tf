@@ -6,26 +6,6 @@ variable "aws_region" {
 
 variable "project_name" {
   type        = string
-  description = "Project name prefix"
+  description = "Project name prefix used for API name"
   default     = "complaint-classifier-phase1"
-}
-
-variable "receive_lambda_invoke_arn" {
-  type        = string
-  description = "Invoke ARN from ReceiveComplaint lambda"
-}
-
-variable "receive_lambda_name" {
-  type        = string
-  description = "Function name from ReceiveComplaint lambda"
-}
-
-variable "metrics_lambda_invoke_arn" {
-  type        = string
-  description = "Invoke ARN from DailyComplaintMetrics lambda"
-}
-
-variable "metrics_lambda_name" {
-  type        = string
-  description = "Function name from DailyComplaintMetrics lambda"
 }

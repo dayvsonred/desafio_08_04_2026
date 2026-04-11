@@ -13,6 +13,31 @@ provider "aws" {
   region = var.aws_region
 }
 
+locals {
+  lambda_references = {
+    receive_complaint = {
+      name       = "complaint-classifier-phase1-receive-complaint"
+      arn        = "arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-receive-complaint"
+      invoke_arn = "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-receive-complaint/invocations"
+    }
+    classify_complaint = {
+      name       = "complaint-classifier-phase1-classify-complaint"
+      arn        = "arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-classify-complaint"
+      invoke_arn = "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-classify-complaint/invocations"
+    }
+    process_classified_complaint = {
+      name       = "complaint-classifier-phase1-process-classified-complaint"
+      arn        = "arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-process-classified-complaint"
+      invoke_arn = "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-process-classified-complaint/invocations"
+    }
+    daily_complaint_metrics = {
+      name       = "complaint-classifier-phase1-daily-complaint-metrics"
+      arn        = "arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-daily-complaint-metrics"
+      invoke_arn = "arn:aws:apigateway:sa-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-daily-complaint-metrics/invocations"
+    }
+  }
+}
+
 resource "aws_apigatewayv2_api" "http_api" {
   name          = "${var.project_name}-api"
   protocol_type = "HTTP"
@@ -21,14 +46,14 @@ resource "aws_apigatewayv2_api" "http_api" {
 resource "aws_apigatewayv2_integration" "receive_complaint" {
   api_id                 = aws_apigatewayv2_api.http_api.id
   integration_type       = "AWS_PROXY"
-  integration_uri        = var.receive_lambda_invoke_arn
+  integration_uri        = local.lambda_references.receive_complaint.invoke_arn
   payload_format_version = "2.0"
 }
 
 resource "aws_apigatewayv2_integration" "daily_metrics" {
   api_id                 = aws_apigatewayv2_api.http_api.id
   integration_type       = "AWS_PROXY"
-  integration_uri        = var.metrics_lambda_invoke_arn
+  integration_uri        = local.lambda_references.daily_complaint_metrics.invoke_arn
   payload_format_version = "2.0"
 }
 
@@ -53,7 +78,7 @@ resource "aws_apigatewayv2_stage" "default" {
 resource "aws_lambda_permission" "allow_api_gateway_receive" {
   statement_id  = "AllowExecutionFromApiGatewayReceive"
   action        = "lambda:InvokeFunction"
-  function_name = var.receive_lambda_name
+  function_name = local.lambda_references.receive_complaint.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
 }
@@ -61,7 +86,7 @@ resource "aws_lambda_permission" "allow_api_gateway_receive" {
 resource "aws_lambda_permission" "allow_api_gateway_metrics" {
   statement_id  = "AllowExecutionFromApiGatewayMetrics"
   action        = "lambda:InvokeFunction"
-  function_name = var.metrics_lambda_name
+  function_name = local.lambda_references.daily_complaint_metrics.name
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
 }

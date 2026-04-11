@@ -9,3 +9,7 @@ output "complaints_route" {
 output "metrics_route" {
   value = "${aws_apigatewayv2_api.http_api.api_endpoint}/metrics"
 }
+
+output "lambda_references" {
+  value = local.lambda_references
+}
