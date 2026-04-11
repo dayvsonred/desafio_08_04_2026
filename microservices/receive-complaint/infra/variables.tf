@@ -13,38 +13,6 @@ variable "lambda_zip_path" {
   description = "Path to ReceiveComplaint zip package"
 }
 
-variable "complaints_table_name" {
-  type = string
-}
-
-variable "complaints_table_arn" {
-  type = string
-}
-
-variable "categories_table_name" {
-  type = string
-}
-
-variable "classification_queue_url" {
-  type = string
-}
-
-variable "classification_queue_arn" {
-  type = string
-}
-
-variable "processing_queue_url" {
-  type = string
-}
-
-variable "metrics_queue_url" {
-  type = string
-}
-
-variable "metrics_queue_arn" {
-  type = string
-}
-
 variable "messages_bucket_name" {
   type    = string
   default = "itau_desafio_2026"

@@ -13,6 +13,19 @@ provider "aws" {
   region = var.aws_region
 }
 
+locals {
+  daily_metrics_table_name = "${var.project_name}-daily-metrics"
+  metrics_queue_name       = "${var.project_name}-metrics"
+}
+
+data "aws_dynamodb_table" "daily_metrics" {
+  name = local.daily_metrics_table_name
+}
+
+data "aws_sqs_queue" "metrics" {
+  name = local.metrics_queue_name
+}
+
 resource "aws_iam_role" "lambda_role" {
   name = "${var.project_name}-daily-metrics-lambda-role"
 
@@ -52,7 +65,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
           "dynamodb:GetItem",
           "dynamodb:UpdateItem"
         ]
-        Resource = var.daily_metrics_table_arn
+        Resource = data.aws_dynamodb_table.daily_metrics.arn
       },
       {
         Effect = "Allow"
@@ -62,7 +75,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
           "sqs:ChangeMessageVisibility",
           "sqs:GetQueueAttributes"
         ]
-        Resource = var.metrics_queue_arn
+        Resource = data.aws_sqs_queue.metrics.arn
       }
     ]
   })
@@ -81,13 +94,13 @@ resource "aws_lambda_function" "daily_metrics" {
 
   environment {
     variables = {
-      AwsResources__DailyMetricsTableName = var.daily_metrics_table_name
+      AwsResources__DailyMetricsTableName = data.aws_dynamodb_table.daily_metrics.name
     }
   }
 }
 
 resource "aws_lambda_event_source_mapping" "metrics_queue_mapping" {
-  event_source_arn        = var.metrics_queue_arn
+  event_source_arn        = data.aws_sqs_queue.metrics.arn
   function_name           = aws_lambda_function.daily_metrics.arn
   batch_size              = 10
   function_response_types = ["ReportBatchItemFailures"]

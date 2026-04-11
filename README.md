@@ -85,6 +85,45 @@ dotnet test microservices/process-classified-complaint/tests/ProcessClassifiedCo
 dotnet test microservices/daily-complaint-metrics/tests/DailyComplaintMetrics.UnitTests/DailyComplaintMetrics.UnitTests.csproj -c Release -m:1
 ```
 
+## Package das Lambdas + Terraform (copiar e executar)
+
+```powershell
+# Base
+$Root = "C:\Users\niore\Documents\desafio\desafio_08_04_2026"
+$ProjectName = "complaint-classifier-phase1"
+$env:AWS_PROFILE = "default"
+$env:AWS_REGION = "sa-east-1"
+
+# Build
+dotnet restore "$Root\ComplaintClassification.sln"
+dotnet build "$Root\ComplaintClassification.sln" -c Release -m:1
+
+# Garantir ferramenta Lambda
+dotnet tool update -g Amazon.Lambda.Tools
+
+# Gerar ZIPs
+dotnet lambda package --project-location "$Root\microservices\receive-complaint\ReceiveComplaint.Function" --configuration Release --framework net8.0 --output-package "$Root\microservices\receive-complaint\infra\receive-complaint.zip"
+dotnet lambda package --project-location "$Root\microservices\classify-complaint\ClassifyComplaint.Function" --configuration Release --framework net8.0 --output-package "$Root\microservices\classify-complaint\infra\classify-complaint.zip"
+dotnet lambda package --project-location "$Root\microservices\process-classified-complaint\ProcessClassifiedComplaint.Function" --configuration Release --framework net8.0 --output-package "$Root\microservices\process-classified-complaint\infra\process-classified-complaint.zip"
+dotnet lambda package --project-location "$Root\microservices\daily-complaint-metrics\DailyComplaintMetrics.Function" --configuration Release --framework net8.0 --output-package "$Root\microservices\daily-complaint-metrics\infra\daily-complaint-metrics.zip"
+
+# Deploy ReceiveComplaint
+terraform -chdir="$Root\microservices\receive-complaint\infra" init
+terraform -chdir="$Root\microservices\receive-complaint\infra" apply -auto-approve -var "project_name=$ProjectName" -var "lambda_zip_path=$Root\microservices\receive-complaint\infra\receive-complaint.zip"
+
+# Deploy ClassifyComplaint
+terraform -chdir="$Root\microservices\classify-complaint\infra" init
+terraform -chdir="$Root\microservices\classify-complaint\infra" apply -auto-approve -var "project_name=$ProjectName" -var "lambda_zip_path=$Root\microservices\classify-complaint\infra\classify-complaint.zip"
+
+# Deploy ProcessClassifiedComplaint
+terraform -chdir="$Root\microservices\process-classified-complaint\infra" init
+terraform -chdir="$Root\microservices\process-classified-complaint\infra" apply -auto-approve -var "project_name=$ProjectName" -var "lambda_zip_path=$Root\microservices\process-classified-complaint\infra\process-classified-complaint.zip"
+
+# Deploy DailyComplaintMetrics
+terraform -chdir="$Root\microservices\daily-complaint-metrics\infra" init
+terraform -chdir="$Root\microservices\daily-complaint-metrics\infra" apply -auto-approve -var "project_name=$ProjectName" -var "lambda_zip_path=$Root\microservices\daily-complaint-metrics\infra\daily-complaint-metrics.zip"
+```
+
 ## Terraform (ordem sugerida)
 
 1. `infra/dynamodb/terraform`

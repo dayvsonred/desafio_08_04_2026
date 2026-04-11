@@ -13,6 +13,34 @@ provider "aws" {
   region = var.aws_region
 }
 
+locals {
+  complaints_table_name     = "${var.project_name}-complaints"
+  categories_table_name     = "${var.project_name}-categories"
+  classification_queue_name = "${var.project_name}-classification"
+  processing_queue_name     = "${var.project_name}-processing"
+  metrics_queue_name        = "${var.project_name}-metrics"
+}
+
+data "aws_dynamodb_table" "complaints" {
+  name = local.complaints_table_name
+}
+
+data "aws_dynamodb_table" "categories" {
+  name = local.categories_table_name
+}
+
+data "aws_sqs_queue" "classification" {
+  name = local.classification_queue_name
+}
+
+data "aws_sqs_queue" "processing" {
+  name = local.processing_queue_name
+}
+
+data "aws_sqs_queue" "metrics" {
+  name = local.metrics_queue_name
+}
+
 resource "aws_iam_role" "lambda_role" {
   name = "${var.project_name}-receive-lambda-role"
 
@@ -51,7 +79,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
         Action = [
           "dynamodb:PutItem"
         ]
-        Resource = var.complaints_table_arn
+        Resource = data.aws_dynamodb_table.complaints.arn
       },
       {
         Effect = "Allow"
@@ -59,8 +87,8 @@ resource "aws_iam_role_policy" "lambda_policy" {
           "sqs:SendMessage"
         ]
         Resource = [
-          var.classification_queue_arn,
-          var.metrics_queue_arn
+          data.aws_sqs_queue.classification.arn,
+          data.aws_sqs_queue.metrics.arn
         ]
       },
       {
@@ -87,17 +115,17 @@ resource "aws_lambda_function" "receive_complaint" {
 
   environment {
     variables = {
-      AwsResources__ComplaintsTableName      = var.complaints_table_name
-      AwsResources__CategoriesTableName      = var.categories_table_name
-      AwsResources__ClassificationQueueUrl   = var.classification_queue_url
-      AwsResources__ProcessingQueueUrl       = var.processing_queue_url
-      AwsResources__MetricsQueueUrl          = var.metrics_queue_url
-      AwsResources__MessagesBucketName       = var.messages_bucket_name
-      AwsResources__BedrockModelId           = var.bedrock_model_id
-      Classification__MinimumWinningScore    = "2"
-      Classification__MinimumScoreGap        = "1"
-      Classification__LowConfidenceThreshold = "0.75"
-      Classification__StrongCategoryRatio    = "0.8"
+      AwsResources__ComplaintsTableName            = data.aws_dynamodb_table.complaints.name
+      AwsResources__CategoriesTableName            = data.aws_dynamodb_table.categories.name
+      AwsResources__ClassificationQueueUrl         = data.aws_sqs_queue.classification.url
+      AwsResources__ProcessingQueueUrl             = data.aws_sqs_queue.processing.url
+      AwsResources__MetricsQueueUrl                = data.aws_sqs_queue.metrics.url
+      AwsResources__MessagesBucketName             = var.messages_bucket_name
+      AwsResources__BedrockModelId                 = var.bedrock_model_id
+      Classification__MinimumWinningScore          = "2"
+      Classification__MinimumScoreGap              = "1"
+      Classification__LowConfidenceThreshold       = "0.75"
+      Classification__StrongCategoryRatio          = "0.8"
       Classification__MaxStrongCategoriesBeforeLlm = "2"
     }
   }

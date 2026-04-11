@@ -13,6 +13,34 @@ provider "aws" {
   region = var.aws_region
 }
 
+locals {
+  complaints_table_name     = "${var.project_name}-complaints"
+  categories_table_name     = "${var.project_name}-categories"
+  classification_queue_name = "${var.project_name}-classification"
+  processing_queue_name     = "${var.project_name}-processing"
+  metrics_queue_name        = "${var.project_name}-metrics"
+}
+
+data "aws_dynamodb_table" "complaints" {
+  name = local.complaints_table_name
+}
+
+data "aws_dynamodb_table" "categories" {
+  name = local.categories_table_name
+}
+
+data "aws_sqs_queue" "classification" {
+  name = local.classification_queue_name
+}
+
+data "aws_sqs_queue" "processing" {
+  name = local.processing_queue_name
+}
+
+data "aws_sqs_queue" "metrics" {
+  name = local.metrics_queue_name
+}
+
 resource "aws_iam_role" "lambda_role" {
   name = "${var.project_name}-process-lambda-role"
 
@@ -52,7 +80,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
           "dynamodb:GetItem",
           "dynamodb:UpdateItem"
         ]
-        Resource = var.complaints_table_arn
+        Resource = data.aws_dynamodb_table.complaints.arn
       },
       {
         Effect = "Allow"
@@ -62,14 +90,14 @@ resource "aws_iam_role_policy" "lambda_policy" {
           "sqs:ChangeMessageVisibility",
           "sqs:GetQueueAttributes"
         ]
-        Resource = var.processing_queue_arn
+        Resource = data.aws_sqs_queue.processing.arn
       },
       {
         Effect = "Allow"
         Action = [
           "sqs:SendMessage"
         ]
-        Resource = var.metrics_queue_arn
+        Resource = data.aws_sqs_queue.metrics.arn
       },
       {
         Effect = "Allow"
@@ -102,24 +130,24 @@ resource "aws_lambda_function" "process_classified_complaint" {
 
   environment {
     variables = {
-      AwsResources__ComplaintsTableName      = var.complaints_table_name
-      AwsResources__CategoriesTableName      = var.categories_table_name
-      AwsResources__ClassificationQueueUrl   = var.classification_queue_url
-      AwsResources__ProcessingQueueUrl       = var.processing_queue_url
-      AwsResources__MetricsQueueUrl          = var.metrics_queue_url
-      AwsResources__MessagesBucketName       = var.messages_bucket_name
-      AwsResources__BedrockModelId           = var.bedrock_model_id
-      Classification__MinimumWinningScore    = "2"
-      Classification__MinimumScoreGap        = "1"
-      Classification__LowConfidenceThreshold = "0.75"
-      Classification__StrongCategoryRatio    = "0.8"
+      AwsResources__ComplaintsTableName            = data.aws_dynamodb_table.complaints.name
+      AwsResources__CategoriesTableName            = data.aws_dynamodb_table.categories.name
+      AwsResources__ClassificationQueueUrl         = data.aws_sqs_queue.classification.url
+      AwsResources__ProcessingQueueUrl             = data.aws_sqs_queue.processing.url
+      AwsResources__MetricsQueueUrl                = data.aws_sqs_queue.metrics.url
+      AwsResources__MessagesBucketName             = var.messages_bucket_name
+      AwsResources__BedrockModelId                 = var.bedrock_model_id
+      Classification__MinimumWinningScore          = "2"
+      Classification__MinimumScoreGap              = "1"
+      Classification__LowConfidenceThreshold       = "0.75"
+      Classification__StrongCategoryRatio          = "0.8"
       Classification__MaxStrongCategoriesBeforeLlm = "2"
     }
   }
 }
 
 resource "aws_lambda_event_source_mapping" "processing_queue_mapping" {
-  event_source_arn        = var.processing_queue_arn
+  event_source_arn        = data.aws_sqs_queue.processing.arn
   function_name           = aws_lambda_function.process_classified_complaint.arn
   batch_size              = 10
   function_response_types = ["ReportBatchItemFailures"]

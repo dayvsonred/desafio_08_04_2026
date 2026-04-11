@@ -8,36 +8,33 @@
 - Filas SQS aplicadas
 - Bucket S3 existente: `itau_desafio_2026`
 - Zip da Lambda gerado (`lambda_zip_path`)
+- Credenciais AWS ativas no terminal (`aws login` / `AWS_PROFILE`)
+
+## Descoberta automatica de recursos AWS
+- DynamoDB e SQS sao buscados automaticamente por `project_name`
+- Prefixo padrao: `complaint-classifier-phase1`
 
 ## Uso (PowerShell)
 ```powershell
-cd C:\Users\niore\Documents\desafio\desafio_08_04_2026\microservices\process-classified-complaint\infra
+$Root = "C:\Users\niore\Documents\desafio\desafio_08_04_2026"
+$ProjectName = "complaint-classifier-phase1"
+$ZipPath = "$Root\microservices\process-classified-complaint\infra\process-classified-complaint.zip"
 
 # Configurar (one-time)
 $env:AWS_PROFILE="default"
 $env:AWS_REGION="sa-east-1"
 
+# Gerar ZIP da Lambda
+dotnet lambda package --project-location "$Root\microservices\process-classified-complaint\ProcessClassifiedComplaint.Function" --configuration Release --framework net8.0 --output-package "$ZipPath"
+
+cd "$Root\microservices\process-classified-complaint\infra"
 terraform init
 terraform plan `
-  -var "lambda_zip_path=<PATH_ZIP>" `
-  -var "complaints_table_name=<COMPLAINTS_TABLE_NAME>" `
-  -var "complaints_table_arn=<COMPLAINTS_TABLE_ARN>" `
-  -var "categories_table_name=<CATEGORIES_TABLE_NAME>" `
-  -var "classification_queue_url=<CLASSIFICATION_QUEUE_URL>" `
-  -var "processing_queue_url=<PROCESSING_QUEUE_URL>" `
-  -var "processing_queue_arn=<PROCESSING_QUEUE_ARN>" `
-  -var "metrics_queue_url=<METRICS_QUEUE_URL>" `
-  -var "metrics_queue_arn=<METRICS_QUEUE_ARN>" `
-  -var "messages_bucket_name=itau_desafio_2026"
+  -var "project_name=$ProjectName" `
+  -var "lambda_zip_path=$ZipPath"
 terraform apply `
-  -var "lambda_zip_path=<PATH_ZIP>" `
-  -var "complaints_table_name=<COMPLAINTS_TABLE_NAME>" `
-  -var "complaints_table_arn=<COMPLAINTS_TABLE_ARN>" `
-  -var "categories_table_name=<CATEGORIES_TABLE_NAME>" `
-  -var "classification_queue_url=<CLASSIFICATION_QUEUE_URL>" `
-  -var "processing_queue_url=<PROCESSING_QUEUE_URL>" `
-  -var "processing_queue_arn=<PROCESSING_QUEUE_ARN>" `
-  -var "metrics_queue_url=<METRICS_QUEUE_URL>" `
-  -var "metrics_queue_arn=<METRICS_QUEUE_ARN>" `
-  -var "messages_bucket_name=itau_desafio_2026"
+  -var "project_name=$ProjectName" `
+  -var "lambda_zip_path=$ZipPath"
 ```
+
+Para usar outro prefixo de recursos AWS, altere apenas o valor de `$ProjectName`.

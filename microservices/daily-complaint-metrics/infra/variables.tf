@@ -11,15 +11,3 @@ variable "project_name" {
 variable "lambda_zip_path" {
   type = string
 }
-
-variable "daily_metrics_table_name" {
-  type = string
-}
-
-variable "daily_metrics_table_arn" {
-  type = string
-}
-
-variable "metrics_queue_arn" {
-  type = string
-}
