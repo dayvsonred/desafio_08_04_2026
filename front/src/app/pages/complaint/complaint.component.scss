@@ -1,0 +1,48 @@
+.page-header {
+  margin-bottom: 16px;
+}
+
+.page-header h1 {
+  margin: 0 0 8px;
+}
+
+.page-header p {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.66);
+}
+
+.form-card {
+  margin-bottom: 18px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.loading-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.error-card {
+  border-left: 4px solid #d32f2f;
+}
+
+.result-card {
+  margin-top: 16px;
+  border-top: 4px solid #2e7d32;
+}
+
+.result-card h2 {
+  margin: 0 0 12px;
+}
+
+.result-card p {
+  margin: 10px 0 0;
+}

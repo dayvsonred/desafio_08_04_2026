@@ -1,0 +1,48 @@
+<section class="page-header">
+  <h1>Nova Reclamacao</h1>
+  <p>Envie a mensagem para o endpoint <code>/complaints</code> do API Gateway.</p>
+</section>
+
+<mat-card class="form-card">
+  <form [formGroup]="form" (ngSubmit)="submitComplaint()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Texto da reclamacao</mat-label>
+      <textarea
+        matInput
+        formControlName="reclamacao"
+        rows="8"
+        placeholder="Descreva a reclamacao do cliente"
+      ></textarea>
+      <mat-hint>Minimo de 10 caracteres</mat-hint>
+      <mat-error *ngIf="form.controls.reclamacao.hasError('required')">
+        A reclamacao e obrigatoria.
+      </mat-error>
+      <mat-error *ngIf="form.controls.reclamacao.hasError('minlength')">
+        Informe ao menos 10 caracteres.
+      </mat-error>
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">
+        Enviar Reclamacao
+      </button>
+    </div>
+  </form>
+</mat-card>
+
+<div class="loading-wrapper" *ngIf="isSubmitting">
+  <mat-spinner diameter="38"></mat-spinner>
+</div>
+
+<mat-card class="error-card" *ngIf="!isSubmitting && errorMessage">
+  <strong>Erro no envio</strong>
+  <p>{{ errorMessage }}</p>
+</mat-card>
+
+<mat-card class="result-card" *ngIf="!isSubmitting && result">
+  <h2>Resposta do Gateway</h2>
+  <mat-divider></mat-divider>
+  <p><strong>Complaint ID:</strong> {{ result.complaintId }}</p>
+  <p><strong>Correlation ID:</strong> {{ result.correlationId }}</p>
+  <p><strong>Status:</strong> {{ result.status }}</p>
+</mat-card>

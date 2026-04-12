@@ -1,0 +1,70 @@
+<section class="page-header">
+  <h1>Metricas Diarias</h1>
+  <p>Consulte os contadores de processamento por dia.</p>
+</section>
+
+<mat-card class="form-card">
+  <form class="metrics-form" (ngSubmit)="loadMetrics()">
+    <mat-form-field appearance="outline">
+      <mat-label>Dia (yyyyMMdd)</mat-label>
+      <input
+        matInput
+        [formControl]="dayControl"
+        placeholder="20260411"
+        maxlength="8"
+      />
+      <mat-hint>Exemplo: 20260411</mat-hint>
+      <mat-error *ngIf="dayControl.hasError('required')">
+        Informe o dia.
+      </mat-error>
+      <mat-error *ngIf="dayControl.hasError('pattern')">
+        Use o formato yyyyMMdd.
+      </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
+      Buscar metricas
+    </button>
+  </form>
+</mat-card>
+
+<div class="loading-wrapper" *ngIf="isLoading">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
+
+<mat-card class="error-card" *ngIf="!isLoading && errorMessage">
+  <strong>Falha ao consultar metricas</strong>
+  <p>{{ errorMessage }}</p>
+</mat-card>
+
+<section *ngIf="!isLoading && metrics" class="metrics-content">
+  <div class="kpi-grid">
+    <mat-card class="kpi-card" *ngFor="let item of metricItems">
+      <div class="kpi-label">{{ item.label }}</div>
+      <div class="kpi-value">{{ item.value }}</div>
+    </mat-card>
+  </div>
+
+  <mat-card class="table-card">
+    <table mat-table [dataSource]="metricItems" class="metrics-table">
+      <ng-container matColumnDef="label">
+        <th mat-header-cell *matHeaderCellDef>Indicador</th>
+        <td mat-cell *matCellDef="let item">{{ item.label }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="value">
+        <th mat-header-cell *matHeaderCellDef>Valor</th>
+        <td mat-cell *matCellDef="let item">{{ item.value }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card>
+
+  <mat-card class="meta-card">
+    <p><strong>Dia:</strong> {{ metrics.day }}</p>
+    <p><strong>Criado em (UTC):</strong> {{ metrics.createdAtUtc }}</p>
+    <p><strong>Atualizado em (UTC):</strong> {{ metrics.updatedAtUtc }}</p>
+  </mat-card>
+</section>

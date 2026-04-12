@@ -8,6 +8,8 @@ Implementacao backend de classificacao de reclamacoes com arquitetura serverless
 .
 +-- ComplaintClassification.sln
 +-- README.md
++-- front/
+|   +-- infra/
 +-- examples/
 |   +-- bedrock-prompt-example.txt
 |   +-- http-request.json
@@ -25,6 +27,39 @@ Implementacao backend de classificacao de reclamacoes com arquitetura serverless
     +-- classify-complaint/
     +-- process-classified-complaint/
     +-- daily-complaint-metrics/
+```
+
+## Frontend Angular
+
+O frontend fica em `front/` (Angular 14 + Angular Material) com duas rotas:
+
+- `/metrics`: consulta `GET /metrics?day=yyyyMMdd`
+- `/reclamacoes`: envia `POST /complaints`
+
+Para executar:
+
+```powershell
+cd front
+npm install
+npm start
+```
+
+Endpoint do gateway configurado no frontend:
+- `https://3wzhy48jd6.execute-api.sa-east-1.amazonaws.com`
+
+Se o gateway mudar, ajuste `gatewayApiBaseUrl` em:
+- `front/src/environments/environment.ts`
+- `front/src/environments/environment.prod.ts`
+
+Deploy do frontend (S3 + CloudFront via Terraform):
+```powershell
+cd front
+npm install
+npm run build
+
+cd infra
+terraform init
+terraform apply
 ```
 
 ## Nome recomendado da nova lambda
@@ -137,6 +172,12 @@ terraform -chdir="$Root\microservices\daily-complaint-metrics\infra" apply -auto
 # Deploy API Gateway
 terraform -chdir="$Root\infra\api-gateway\terraform" init
 terraform -chdir="$Root\infra\api-gateway\terraform" apply -auto-approve
+
+# Deploy Frontend (S3 + CloudFront)
+npm install --prefix "$Root\front"
+npm run build --prefix "$Root\front"
+terraform -chdir="$Root\front\infra" init
+terraform -chdir="$Root\front\infra" apply -auto-approve
 ```
 
 ## Terraform (ordem sugerida)
@@ -149,5 +190,6 @@ terraform -chdir="$Root\infra\api-gateway\terraform" apply -auto-approve
 6. `microservices/process-classified-complaint/infra`
 7. `microservices/daily-complaint-metrics/infra`
 8. `infra/api-gateway/terraform`
+9. `front/infra`
 
 Cada pasta Terraform possui `README.md` com comandos PowerShell.

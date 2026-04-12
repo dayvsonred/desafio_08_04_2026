@@ -41,6 +41,14 @@ locals {
 resource "aws_apigatewayv2_api" "http_api" {
   name          = "${var.project_name}-api"
   protocol_type = "HTTP"
+
+  cors_configuration {
+    allow_origins  = ["*"]
+    allow_methods  = ["GET", "POST", "OPTIONS"]
+    allow_headers  = ["content-type", "x-correlation-id"]
+    expose_headers = ["content-type"]
+    max_age        = 300
+  }
 }
 
 resource "aws_apigatewayv2_integration" "receive_complaint" {

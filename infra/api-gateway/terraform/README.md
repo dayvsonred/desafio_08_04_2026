@@ -6,6 +6,11 @@
 ## Pre-requisito
 Deploy das 4 Lambdas aplicado na mesma conta/regiao.
 
+Esse modulo tambem configura CORS para browser:
+- `allow_origins = ["*"]`
+- `allow_methods = ["GET", "POST", "OPTIONS"]`
+- `allow_headers = ["content-type", "x-correlation-id"]`
+
 As referencias de lambdas (nome e ARN) ja estao fixas no `main.tf`:
 
 1. `complaint-classifier-phase1-receive-complaint`
@@ -16,6 +21,18 @@ As referencias de lambdas (nome e ARN) ja estao fixas no `main.tf`:
    `arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-process-classified-complaint`
 4. `complaint-classifier-phase1-daily-complaint-metrics`
    `arn:aws:lambda:sa-east-1:727646486460:function:complaint-classifier-phase1-daily-complaint-metrics`
+
+## Manter API existente (ID `3wzhy48jd6`)
+Use import apenas uma vez, se o recurso ainda nao estiver no state.
+
+```powershell
+cd C:\Users\niore\Documents\desafio\desafio_08_04_2026\infra\api-gateway\terraform
+terraform init
+terraform import aws_apigatewayv2_api.http_api 3wzhy48jd6
+```
+
+Se der erro `Resource already managed by Terraform`, nao rode `import` novamente.
+Nesse caso, siga direto com `terraform plan` e `terraform apply`.
 
 ## Uso (PowerShell)
 ```powershell
@@ -31,6 +48,8 @@ terraform apply
 ```
 
 ## Outputs
+- `api_id`
+- `api_endpoint`
 - `complaints_route`
 - `metrics_route`
 - `lambda_references`

@@ -1,0 +1,23 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <span>{{ appName }}</span>
+  <span class="spacer"></span>
+  <a
+    mat-button
+    routerLink="/metrics"
+    routerLinkActive="active-link"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    Metricas
+  </a>
+  <a
+    mat-button
+    routerLink="/reclamacoes"
+    routerLinkActive="active-link"
+  >
+    Nova Reclamacao
+  </a>
+</mat-toolbar>
+
+<main class="app-content">
+  <router-outlet></router-outlet>
+</main>
