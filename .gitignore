@@ -47,3 +47,6 @@ override.tf.json
 
 # Lambda packaging artifacts
 *.zip
+
+
+local_2026/*

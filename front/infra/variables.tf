@@ -1,6 +1,6 @@
 variable "aws_region" {
   type        = string
-  description = "AWS region for S3 bucket resources"
+  description = "AWS region for CloudFront/S3 integration resources"
   default     = "sa-east-1"
 }
 
@@ -10,16 +10,22 @@ variable "project_name" {
   default     = "complaint-classifier-phase1"
 }
 
+variable "shared_bucket_name" {
+  type        = string
+  description = "Central S3 bucket name created in infra/s3/terraform"
+  default     = "itau-data-teste-20260411"
+}
+
+variable "frontend_prefix" {
+  type        = string
+  description = "Prefix (folder) used to store frontend files in shared bucket"
+  default     = "frontend"
+}
+
 variable "frontend_build_dir" {
   type        = string
   description = "Path to Angular build output directory"
   default     = "../dist/front"
-}
-
-variable "frontend_bucket_name" {
-  type        = string
-  description = "Optional custom bucket name for frontend assets"
-  default     = "front-itau-test-20260411"
 }
 
 variable "cloudfront_price_class" {

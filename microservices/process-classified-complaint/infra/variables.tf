@@ -14,7 +14,7 @@ variable "lambda_zip_path" {
 
 variable "messages_bucket_name" {
   type    = string
-  default = "itau_desafio_2026"
+  default = "itau-data-teste-20260411"
 }
 
 variable "bedrock_model_id" {

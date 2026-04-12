@@ -13,16 +13,19 @@ provider "aws" {
   region = var.aws_region
 }
 
-data "aws_caller_identity" "current" {}
+data "aws_s3_bucket" "principal" {
+  bucket = var.shared_bucket_name
+}
 
 data "aws_cloudfront_cache_policy" "caching_optimized" {
   name = "Managed-CachingOptimized"
 }
 
 locals {
-  frontend_bucket_name = coalesce(var.frontend_bucket_name, "${var.project_name}-front-${data.aws_caller_identity.current.account_id}")
-  frontend_build_dir   = abspath(var.frontend_build_dir)
-  frontend_files       = fileset(local.frontend_build_dir, "**")
+  frontend_build_dir = abspath(var.frontend_build_dir)
+  frontend_files     = fileset(local.frontend_build_dir, "**")
+  frontend_prefix    = trim(var.frontend_prefix, "/")
+  origin_path        = local.frontend_prefix == "" ? null : "/${local.frontend_prefix}"
 
   content_types = {
     ".css"   = "text/css"
@@ -43,44 +46,9 @@ locals {
   }
 }
 
-resource "aws_s3_bucket" "frontend" {
-  bucket = local.frontend_bucket_name
-
-  tags = merge(var.tags, {
-    Name = local.frontend_bucket_name
-  })
-}
-
-resource "aws_s3_bucket_public_access_block" "frontend" {
-  bucket = aws_s3_bucket.frontend.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
-}
-
-resource "aws_s3_bucket_ownership_controls" "frontend" {
-  bucket = aws_s3_bucket.frontend.id
-
-  rule {
-    object_ownership = "BucketOwnerEnforced"
-  }
-}
-
-resource "aws_s3_bucket_server_side_encryption_configuration" "frontend" {
-  bucket = aws_s3_bucket.frontend.id
-
-  rule {
-    apply_server_side_encryption_by_default {
-      sse_algorithm = "AES256"
-    }
-  }
-}
-
 resource "aws_cloudfront_origin_access_control" "frontend" {
   name                              = "${var.project_name}-front-oac"
-  description                       = "OAC for ${local.frontend_bucket_name}"
+  description                       = "OAC for ${var.shared_bucket_name}"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
@@ -94,9 +62,10 @@ resource "aws_cloudfront_distribution" "frontend" {
   price_class         = var.cloudfront_price_class
 
   origin {
-    domain_name              = aws_s3_bucket.frontend.bucket_regional_domain_name
+    domain_name              = data.aws_s3_bucket.principal.bucket_regional_domain_name
     origin_id                = "frontend-s3-origin"
     origin_access_control_id = aws_cloudfront_origin_access_control.frontend.id
+    origin_path              = local.origin_path
   }
 
   default_cache_behavior {
@@ -142,8 +111,12 @@ data "aws_iam_policy_document" "frontend_bucket_policy" {
     sid    = "AllowCloudFrontReadOnly"
     effect = "Allow"
 
-    actions   = ["s3:GetObject"]
-    resources = ["${aws_s3_bucket.frontend.arn}/*"]
+    actions = ["s3:GetObject"]
+    resources = [
+      local.frontend_prefix == ""
+      ? "${data.aws_s3_bucket.principal.arn}/*"
+      : "${data.aws_s3_bucket.principal.arn}/${local.frontend_prefix}/*"
+    ]
 
     principals {
       type        = "Service"
@@ -159,15 +132,15 @@ data "aws_iam_policy_document" "frontend_bucket_policy" {
 }
 
 resource "aws_s3_bucket_policy" "frontend" {
-  bucket = aws_s3_bucket.frontend.id
+  bucket = data.aws_s3_bucket.principal.id
   policy = data.aws_iam_policy_document.frontend_bucket_policy.json
 }
 
 resource "aws_s3_object" "frontend_files" {
   for_each = { for file in local.frontend_files : file => file }
 
-  bucket = aws_s3_bucket.frontend.id
-  key    = each.value
+  bucket = data.aws_s3_bucket.principal.id
+  key    = local.frontend_prefix == "" ? each.value : "${local.frontend_prefix}/${each.value}"
   source = "${local.frontend_build_dir}/${each.value}"
   etag   = filemd5("${local.frontend_build_dir}/${each.value}")
 

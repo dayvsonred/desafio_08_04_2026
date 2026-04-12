@@ -1,5 +1,5 @@
 output "frontend_bucket_name" {
-  value = aws_s3_bucket.frontend.bucket
+  value = data.aws_s3_bucket.principal.bucket
 }
 
 output "cloudfront_distribution_id" {
@@ -16,4 +16,8 @@ output "frontend_url" {
 
 output "uploaded_files_count" {
   value = length(local.frontend_files)
+}
+
+output "frontend_prefix" {
+  value = local.frontend_prefix
 }

@@ -42,15 +42,23 @@ npm run build
 
 ## Deploy Terraform do frontend
 
-O modulo Terraform para publicar o frontend esta em `front/infra` (S3 + CloudFront).
+O modulo Terraform para publicar o frontend esta em `front/infra` (CloudFront + upload no bucket central).
 
 ```powershell
-cd front
+cd C:\Users\niore\Documents\desafio\desafio_08_04_2026\infra\s3\terraform
+terraform init
+terraform apply
+
+cd C:\Users\niore\Documents\desafio\desafio_08_04_2026\front
 npm install
 npm run build
 
-cd infra
+cd C:\Users\niore\Documents\desafio\desafio_08_04_2026\front\infra
 terraform init
 terraform plan
 terraform apply
 ```
+
+Bucket central usado por padrao:
+- `itau-data-teste-20260411`
+- prefix do frontend: `frontend/`

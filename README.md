@@ -21,6 +21,7 @@ Implementacao backend de classificacao de reclamacoes com arquitetura serverless
 +-- infra/
 |   +-- api-gateway/terraform/
 |   +-- dynamodb/terraform/
+|   +-- s3/terraform/
 |   +-- sqs/terraform/
 +-- microservices/
     +-- receive-complaint/
@@ -53,6 +54,10 @@ Se o gateway mudar, ajuste `gatewayApiBaseUrl` em:
 
 Deploy do frontend (S3 + CloudFront via Terraform):
 ```powershell
+cd infra\s3\terraform
+terraform init
+terraform apply
+
 cd front
 npm install
 npm run build
@@ -61,6 +66,18 @@ cd infra
 terraform init
 terraform apply
 ```
+
+## Bucket S3 centralizado
+
+Bucket principal do projeto:
+- `itau-data-teste-20260411`
+
+Todos os dados S3 ficam centralizados nele por prefixes (pastas logicas):
+- `complaint_message_received/`
+- `complaint_message_processed/`
+- `frontend/`
+
+Observacao: no S3 nao existe bucket dentro de bucket; a centralizacao e feita por prefixes.
 
 ## Nome recomendado da nova lambda
 
@@ -153,6 +170,10 @@ dotnet lambda package --project-location "$Root\microservices\classify-complaint
 dotnet lambda package --project-location "$Root\microservices\process-classified-complaint\ProcessClassifiedComplaint.Function" --configuration Release --framework net8.0 --output-package "$Root\microservices\process-classified-complaint\infra\process-classified-complaint.zip"
 dotnet lambda package --project-location "$Root\microservices\daily-complaint-metrics\DailyComplaintMetrics.Function" --configuration Release --framework net8.0 --output-package "$Root\microservices\daily-complaint-metrics\infra\daily-complaint-metrics.zip"
 
+# Deploy S3 central
+terraform -chdir="$Root\infra\s3\terraform" init
+terraform -chdir="$Root\infra\s3\terraform" apply -auto-approve
+
 # Deploy ReceiveComplaint
 terraform -chdir="$Root\microservices\receive-complaint\infra" init
 terraform -chdir="$Root\microservices\receive-complaint\infra" apply -auto-approve -var "project_name=$ProjectName" -var "lambda_zip_path=$Root\microservices\receive-complaint\infra\receive-complaint.zip"
@@ -184,12 +205,13 @@ terraform -chdir="$Root\front\infra" apply -auto-approve
 
 1. `infra/dynamodb/terraform`
 2. `infra/sqs/terraform`
-3. package das lambdas (`dotnet lambda package`)
-4. `microservices/receive-complaint/infra`
-5. `microservices/classify-complaint/infra`
-6. `microservices/process-classified-complaint/infra`
-7. `microservices/daily-complaint-metrics/infra`
-8. `infra/api-gateway/terraform`
-9. `front/infra`
+3. `infra/s3/terraform`
+4. package das lambdas (`dotnet lambda package`)
+5. `microservices/receive-complaint/infra`
+6. `microservices/classify-complaint/infra`
+7. `microservices/process-classified-complaint/infra`
+8. `microservices/daily-complaint-metrics/infra`
+9. `infra/api-gateway/terraform`
+10. `front/infra`
 
 Cada pasta Terraform possui `README.md` com comandos PowerShell.

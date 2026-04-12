@@ -6,7 +6,7 @@
 ## Pre-requisitos
 - Tabelas DynamoDB aplicadas
 - Filas SQS aplicadas
-- Bucket S3 existente: `itau_desafio_2026`
+- Bucket S3 central aplicado (`infra/s3/terraform`): `itau-data-teste-20260411`
 - Zip da Lambda gerado (`lambda_zip_path`)
 - Credenciais AWS ativas no terminal (`aws login` / `AWS_PROFILE`)
 
