@@ -1,11 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
-import { DailyMetricsResponse, GatewayService } from '../../core/services/gateway.service';
+import {
+  DailyMetricsResponse,
+  GatewayService,
+  MetricMessageEventItem
+} from '../../core/services/gateway.service';
+
+type DrilldownEventType = 'RECEIVED' | 'PROCESSED';
 
 interface MetricItem {
   label: string;
   value: number;
+  drilldownEventType: DrilldownEventType | null;
 }
 
 @Component({
@@ -20,11 +27,17 @@ export class MetricsComponent implements OnInit {
   ]);
 
   readonly displayedColumns: string[] = ['label', 'value'];
+  readonly drilldownDisplayedColumns: string[] = ['complaintId', 'correlationId', 'eventCreatedAtUtc'];
 
   isLoading = false;
   errorMessage = '';
   metrics: DailyMetricsResponse | null = null;
   metricItems: MetricItem[] = [];
+  selectedDrilldownLabel = '';
+  selectedDrilldownType: DrilldownEventType | null = null;
+  drilldownItems: MetricMessageEventItem[] = [];
+  isDrilldownLoading = false;
+  drilldownErrorMessage = '';
 
   constructor(private readonly gatewayService: GatewayService) { }
 
@@ -49,20 +62,63 @@ export class MetricsComponent implements OnInit {
         next: (metrics) => {
           this.metrics = metrics;
           this.metricItems = [
-            { label: 'Recebidas', value: metrics.receivedCount },
-            { label: 'Classificadas', value: metrics.classifiedCount },
-            { label: 'Falha de classificacao', value: metrics.classificationFailedCount },
-            { label: 'Processadas com sucesso', value: metrics.processedSuccessCount },
-            { label: 'Processadas com erro', value: metrics.processedErrorCount }
+            { label: 'Recebidas', value: metrics.receivedCount, drilldownEventType: 'RECEIVED' },
+            { label: 'Classificadas', value: metrics.classifiedCount, drilldownEventType: null },
+            { label: 'Falha de classificacao', value: metrics.classificationFailedCount, drilldownEventType: null },
+            { label: 'Processadas com sucesso', value: metrics.processedSuccessCount, drilldownEventType: 'PROCESSED' },
+            { label: 'Processadas com erro', value: metrics.processedErrorCount, drilldownEventType: null }
           ];
+          this.clearDrilldown();
         },
         error: (error) => {
           const backendMessage = error?.error?.error;
           this.metrics = null;
           this.metricItems = [];
+          this.clearDrilldown();
           this.errorMessage = backendMessage || 'Nao foi possivel carregar as metricas para o dia informado.';
         }
       });
+  }
+
+  onMetricCardClick(item: MetricItem): void {
+    if (!item.drilldownEventType || !this.metrics) {
+      return;
+    }
+
+    this.loadMetricEvents(item.label, item.drilldownEventType);
+  }
+
+  private loadMetricEvents(label: string, eventType: DrilldownEventType): void {
+    if (this.dayControl.invalid) {
+      return;
+    }
+
+    const day = this.dayControl.value ?? '';
+    this.selectedDrilldownLabel = label;
+    this.selectedDrilldownType = eventType;
+    this.drilldownItems = [];
+    this.drilldownErrorMessage = '';
+    this.isDrilldownLoading = true;
+
+    this.gatewayService.getMetricMessageEvents(day, eventType)
+      .pipe(finalize(() => { this.isDrilldownLoading = false; }))
+      .subscribe({
+        next: (response) => {
+          this.drilldownItems = response.items;
+        },
+        error: (error) => {
+          const backendMessage = error?.error?.error;
+          this.drilldownErrorMessage = backendMessage || 'Nao foi possivel carregar os IDs desta metrica.';
+        }
+      });
+  }
+
+  private clearDrilldown(): void {
+    this.selectedDrilldownLabel = '';
+    this.selectedDrilldownType = null;
+    this.drilldownItems = [];
+    this.isDrilldownLoading = false;
+    this.drilldownErrorMessage = '';
   }
 
   private formatAsYyyyMmDd(date: Date): string {

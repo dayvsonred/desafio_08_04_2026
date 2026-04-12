@@ -1,0 +1,99 @@
+<section class="page-header">
+  <h1>Buscar Processadas</h1>
+  <p>Consulte mensagens processadas por <strong>Correlation ID</strong> ou <strong>Complaint ID</strong>.</p>
+</section>
+
+<mat-card class="form-card">
+  <form class="search-form" (ngSubmit)="searchProcessedMessages()">
+    <div class="search-mode">
+      <button
+        mat-stroked-button
+        type="button"
+        [color]="selectedSearchBy === 'correlationId' ? 'primary' : undefined"
+        (click)="setSearchBy('correlationId')"
+      >
+        Correlation ID
+      </button>
+
+      <button
+        mat-stroked-button
+        type="button"
+        [color]="selectedSearchBy === 'complaintId' ? 'primary' : undefined"
+        (click)="setSearchBy('complaintId')"
+      >
+        Complaint ID
+      </button>
+    </div>
+
+    <mat-form-field appearance="outline">
+      <mat-label>{{ searchFieldLabel }}</mat-label>
+      <input matInput [formControl]="searchForm.controls.value" [placeholder]="searchPlaceholder" />
+      <mat-error *ngIf="searchForm.controls.value.hasError('required')">
+        Informe um valor para busca.
+      </mat-error>
+      <mat-error *ngIf="searchForm.controls.value.hasError('minlength')">
+        Valor muito curto para busca.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="limit-field">
+      <mat-label>Limite</mat-label>
+      <input matInput type="number" [formControl]="searchForm.controls.limit" min="1" max="500" />
+      <mat-error *ngIf="searchForm.controls.limit.hasError('required')">
+        Informe o limite.
+      </mat-error>
+      <mat-error *ngIf="searchForm.controls.limit.hasError('min') || searchForm.controls.limit.hasError('max')">
+        Use um valor entre 1 e 500.
+      </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="isLoading">
+      Buscar processadas
+    </button>
+  </form>
+</mat-card>
+
+<div class="loading-wrapper" *ngIf="isLoading">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
+
+<mat-card class="error-card" *ngIf="!isLoading && errorMessage">
+  <strong>Falha na busca</strong>
+  <p>{{ errorMessage }}</p>
+</mat-card>
+
+<mat-card class="result-card" *ngIf="!isLoading && !errorMessage && searchValue">
+  <p class="result-summary">
+    <strong>Filtro:</strong> {{ searchByLabel }} = {{ searchValue }}<br />
+    <strong>Total encontrado:</strong> {{ total }}
+  </p>
+
+  <p class="result-empty" *ngIf="items.length === 0">
+    Nenhuma mensagem processada encontrada para o filtro informado.
+  </p>
+
+  <table mat-table [dataSource]="items" class="result-table" *ngIf="items.length > 0">
+    <ng-container matColumnDef="complaintId">
+      <th mat-header-cell *matHeaderCellDef>Complaint ID</th>
+      <td mat-cell *matCellDef="let item">{{ item.complaintId }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="correlationId">
+      <th mat-header-cell *matHeaderCellDef>Correlation ID</th>
+      <td mat-cell *matCellDef="let item">{{ item.correlationId }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="day">
+      <th mat-header-cell *matHeaderCellDef>Dia</th>
+      <td mat-cell *matCellDef="let item">{{ item.day }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="processedAtUtc">
+      <th mat-header-cell *matHeaderCellDef>Processada em (UTC)</th>
+      <td mat-cell *matCellDef="let item">{{ item.processedAtUtc }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</mat-card>

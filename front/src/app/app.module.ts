@@ -17,12 +17,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ComplaintComponent } from './pages/complaint/complaint.component';
 import { MetricsComponent } from './pages/metrics/metrics.component';
+import { ProcessedMessagesComponent } from './pages/processed-messages/processed-messages.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ComplaintComponent,
-    MetricsComponent
+    MetricsComponent,
+    ProcessedMessagesComponent
   ],
   imports: [
     BrowserModule,

@@ -77,6 +77,18 @@ resource "aws_apigatewayv2_route" "get_metrics" {
   target    = "integrations/${aws_apigatewayv2_integration.daily_metrics.id}"
 }
 
+resource "aws_apigatewayv2_route" "get_metrics_events" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "GET /metrics/events"
+  target    = "integrations/${aws_apigatewayv2_integration.daily_metrics.id}"
+}
+
+resource "aws_apigatewayv2_route" "get_metrics_processed" {
+  api_id    = aws_apigatewayv2_api.http_api.id
+  route_key = "GET /metrics/processed"
+  target    = "integrations/${aws_apigatewayv2_integration.daily_metrics.id}"
+}
+
 resource "aws_apigatewayv2_stage" "default" {
   api_id      = aws_apigatewayv2_api.http_api.id
   name        = "$default"

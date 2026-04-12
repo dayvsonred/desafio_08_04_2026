@@ -13,6 +13,8 @@ public static class ServiceCollectionExtensions
 
         services.AddTransient<UpdateDailyMetricsHandler>();
         services.AddTransient<GetDailyMetricsHandler>();
+        services.AddTransient<GetMetricMessageEventsHandler>();
+        services.AddTransient<GetProcessedMessagesHandler>();
 
         return services;
     }

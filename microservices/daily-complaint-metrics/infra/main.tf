@@ -63,7 +63,9 @@ resource "aws_iam_role_policy" "lambda_policy" {
         Effect = "Allow"
         Action = [
           "dynamodb:GetItem",
-          "dynamodb:UpdateItem"
+          "dynamodb:UpdateItem",
+          "dynamodb:PutItem",
+          "dynamodb:Query"
         ]
         Resource = data.aws_dynamodb_table.daily_metrics.arn
       },

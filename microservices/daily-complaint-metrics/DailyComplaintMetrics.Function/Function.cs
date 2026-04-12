@@ -16,24 +16,38 @@ namespace DailyComplaintMetrics.Function;
 
 public sealed class Function
 {
+    private const int DefaultQueryLimit = 100;
+    private const int MaxQueryLimit = 500;
+
     private static readonly JsonSerializerOptions JsonSerializerOptions = new(JsonSerializerDefaults.Web);
 
     private readonly UpdateDailyMetricsHandler _updateHandler;
     private readonly GetDailyMetricsHandler _getHandler;
+    private readonly GetMetricMessageEventsHandler _getMetricMessageEventsHandler;
+    private readonly GetProcessedMessagesHandler _getProcessedMessagesHandler;
     private readonly ILogger<Function> _logger;
 
     public Function()
         : this(
             ServiceProviderFactory.GetProvider().GetRequiredService<UpdateDailyMetricsHandler>(),
             ServiceProviderFactory.GetProvider().GetRequiredService<GetDailyMetricsHandler>(),
+            ServiceProviderFactory.GetProvider().GetRequiredService<GetMetricMessageEventsHandler>(),
+            ServiceProviderFactory.GetProvider().GetRequiredService<GetProcessedMessagesHandler>(),
             ServiceProviderFactory.GetProvider().GetRequiredService<ILogger<Function>>())
     {
     }
 
-    public Function(UpdateDailyMetricsHandler updateHandler, GetDailyMetricsHandler getHandler, ILogger<Function> logger)
+    public Function(
+        UpdateDailyMetricsHandler updateHandler,
+        GetDailyMetricsHandler getHandler,
+        GetMetricMessageEventsHandler getMetricMessageEventsHandler,
+        GetProcessedMessagesHandler getProcessedMessagesHandler,
+        ILogger<Function> logger)
     {
         _updateHandler = updateHandler;
         _getHandler = getHandler;
+        _getMetricMessageEventsHandler = getMetricMessageEventsHandler;
+        _getProcessedMessagesHandler = getProcessedMessagesHandler;
         _logger = logger;
     }
 
@@ -92,10 +106,48 @@ public sealed class Function
             return BuildResponse(HttpStatusCode.MethodNotAllowed, new { error = "Metodo nao suportado." });
         }
 
+        var path = NormalizePath(GetRawPath(input));
+
+        try
+        {
+            if (string.Equals(path, "/metrics", StringComparison.OrdinalIgnoreCase))
+            {
+                return await HandleGetMetricsAsync(input);
+            }
+
+            if (string.Equals(path, "/metrics/events", StringComparison.OrdinalIgnoreCase))
+            {
+                return await HandleGetMetricEventsAsync(input);
+            }
+
+            if (string.Equals(path, "/metrics/processed", StringComparison.OrdinalIgnoreCase))
+            {
+                return await HandleGetProcessedMessagesAsync(input);
+            }
+
+            return BuildResponse(HttpStatusCode.NotFound, new { error = $"Rota nao encontrada: {path}" });
+        }
+        catch (ArgumentException exception)
+        {
+            return BuildResponse(HttpStatusCode.BadRequest, new { error = exception.Message });
+        }
+        catch (InvalidOperationException exception)
+        {
+            return BuildResponse(HttpStatusCode.BadRequest, new { error = exception.Message });
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Daily metrics GET request failed. path={Path}", path);
+            return BuildResponse(HttpStatusCode.InternalServerError, new { error = "Falha interna ao consultar metricas." });
+        }
+    }
+
+    private async Task<APIGatewayProxyResponse> HandleGetMetricsAsync(JsonElement input)
+    {
         var day = GetQueryStringParameter(input, "day");
         if (string.IsNullOrWhiteSpace(day) || !Regex.IsMatch(day, "^\\d{8}$"))
         {
-            return BuildResponse(HttpStatusCode.BadRequest, new { error = "Parametro 'day' obrigatorio no formato yyyyMMdd." });
+            throw new ArgumentException("Parametro 'day' obrigatorio no formato yyyyMMdd.");
         }
 
         var metrics = await _getHandler.HandleAsync(day, CancellationToken.None);
@@ -110,6 +162,73 @@ public sealed class Function
             processedErrorCount = metrics.ProcessedErrorCount,
             createdAtUtc = metrics.CreatedAtUtc,
             updatedAtUtc = metrics.UpdatedAtUtc
+        });
+    }
+
+    private async Task<APIGatewayProxyResponse> HandleGetMetricEventsAsync(JsonElement input)
+    {
+        var day = GetQueryStringParameter(input, "day");
+        if (string.IsNullOrWhiteSpace(day) || !Regex.IsMatch(day, "^\\d{8}$"))
+        {
+            throw new ArgumentException("Parametro 'day' obrigatorio no formato yyyyMMdd.");
+        }
+
+        var eventType = GetQueryStringParameter(input, "eventType");
+        if (string.IsNullOrWhiteSpace(eventType))
+        {
+            throw new ArgumentException("Parametro 'eventType' obrigatorio.");
+        }
+
+        var limit = ReadLimit(input);
+        var items = await _getMetricMessageEventsHandler.HandleAsync(day, eventType, limit, CancellationToken.None);
+
+        return BuildResponse(HttpStatusCode.OK, new
+        {
+            day,
+            eventType = eventType.Trim().ToUpperInvariant(),
+            total = items.Count,
+            items = items.Select(item => new
+            {
+                complaintId = item.ComplaintId,
+                correlationId = item.CorrelationId,
+                eventType = item.EventType,
+                eventCreatedAtUtc = item.EventCreatedAtUtc
+            })
+        });
+    }
+
+    private async Task<APIGatewayProxyResponse> HandleGetProcessedMessagesAsync(JsonElement input)
+    {
+        var complaintId = GetQueryStringParameter(input, "complaintId");
+        var correlationId = GetQueryStringParameter(input, "correlationId");
+        var hasComplaintId = !string.IsNullOrWhiteSpace(complaintId);
+        var hasCorrelationId = !string.IsNullOrWhiteSpace(correlationId);
+
+        if (hasComplaintId == hasCorrelationId)
+        {
+            throw new ArgumentException("Informe apenas um filtro: 'complaintId' ou 'correlationId'.");
+        }
+
+        var limit = ReadLimit(input);
+        var items = hasComplaintId
+            ? await _getProcessedMessagesHandler.HandleByComplaintIdAsync(complaintId!, limit, CancellationToken.None)
+            : await _getProcessedMessagesHandler.HandleByCorrelationIdAsync(correlationId!, limit, CancellationToken.None);
+
+        var searchBy = hasComplaintId ? "complaintId" : "correlationId";
+        var searchValue = hasComplaintId ? complaintId! : correlationId!;
+
+        return BuildResponse(HttpStatusCode.OK, new
+        {
+            searchBy,
+            searchValue,
+            total = items.Count,
+            items = items.Select(item => new
+            {
+                complaintId = item.ComplaintId,
+                correlationId = item.CorrelationId,
+                day = item.Day,
+                processedAtUtc = item.EventCreatedAtUtc
+            })
         });
     }
 
@@ -152,6 +271,58 @@ public sealed class Function
         }
 
         return null;
+    }
+
+    private static string GetRawPath(JsonElement input)
+    {
+        if (input.TryGetProperty("rawPath", out var rawPath) && !string.IsNullOrWhiteSpace(rawPath.GetString()))
+        {
+            return rawPath.GetString()!;
+        }
+
+        if (input.TryGetProperty("path", out var path) && !string.IsNullOrWhiteSpace(path.GetString()))
+        {
+            return path.GetString()!;
+        }
+
+        return "/metrics";
+    }
+
+    private static string NormalizePath(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return "/";
+        }
+
+        var normalized = path.Trim();
+        if (!normalized.StartsWith('/'))
+        {
+            normalized = "/" + normalized;
+        }
+
+        if (normalized.Length > 1 && normalized.EndsWith('/'))
+        {
+            normalized = normalized.TrimEnd('/');
+        }
+
+        return normalized;
+    }
+
+    private static int ReadLimit(JsonElement input)
+    {
+        var rawLimit = GetQueryStringParameter(input, "limit");
+        if (string.IsNullOrWhiteSpace(rawLimit))
+        {
+            return DefaultQueryLimit;
+        }
+
+        if (!int.TryParse(rawLimit, out var parsed))
+        {
+            throw new ArgumentException("Parametro 'limit' invalido. Use um numero inteiro.");
+        }
+
+        return Math.Clamp(parsed, 1, MaxQueryLimit);
     }
 
     private static APIGatewayProxyResponse BuildResponse(HttpStatusCode statusCode, object body)

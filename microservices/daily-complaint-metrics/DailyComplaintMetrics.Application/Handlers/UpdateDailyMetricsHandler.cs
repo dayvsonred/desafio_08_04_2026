@@ -28,6 +28,13 @@ public sealed class UpdateDailyMetricsHandler
         ValidateEventType(normalizedEventType);
 
         await _dailyMetricsRepository.IncrementAsync(day, normalizedEventType, _clock.UtcNow, cancellationToken);
+        await _dailyMetricsRepository.IndexMessageEventAsync(
+            day,
+            normalizedEventType,
+            message.ComplaintId,
+            message.CorrelationId,
+            message.CreatedAtUtc,
+            cancellationToken);
 
         _logger.LogInformation(
             "Daily metric updated. day={Day} eventType={EventType} complaintId={ComplaintId} correlationId={CorrelationId}",
