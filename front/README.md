@@ -62,3 +62,13 @@ terraform apply
 Bucket central usado por padrao:
 - `itau-data-teste-20260411`
 - prefix do frontend: `frontend/`
+
+terraform output -raw frontend_url
+
+
+cloudfront_distribution_id = "E3NIOFEQPP4VRW"
+cloudfront_domain_name = "d3dbpxffvde3hb.cloudfront.net"
+frontend_bucket_name = "itau-data-teste-20260411"
+frontend_prefix = "frontend"
+frontend_url = "https://d3dbpxffvde3hb.cloudfront.net"
+uploaded_files_count = 7

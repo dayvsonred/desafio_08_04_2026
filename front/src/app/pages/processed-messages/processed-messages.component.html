@@ -4,7 +4,7 @@
 </section>
 
 <mat-card class="form-card">
-  <form class="search-form" (ngSubmit)="searchProcessedMessages()">
+  <form class="search-form" (submit)="$event.preventDefault(); searchProcessedMessages()">
     <div class="search-mode">
       <button
         mat-stroked-button

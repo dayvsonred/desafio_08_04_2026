@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, ValidationErrors, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 import {
   DailyMetricsResponse,
@@ -21,9 +21,9 @@ interface MetricItem {
   styleUrls: ['./metrics.component.scss']
 })
 export class MetricsComponent implements OnInit {
-  readonly dayControl = new FormControl('', [
+  readonly dayControl = new FormControl<Date | null>(null, [
     Validators.required,
-    Validators.pattern(/^\d{8}$/)
+    MetricsComponent.validDateValidator
   ]);
 
   readonly displayedColumns: string[] = ['label', 'value'];
@@ -31,6 +31,7 @@ export class MetricsComponent implements OnInit {
 
   isLoading = false;
   errorMessage = '';
+  noDataForDay = '';
   metrics: DailyMetricsResponse | null = null;
   metricItems: MetricItem[] = [];
   selectedDrilldownLabel = '';
@@ -42,25 +43,41 @@ export class MetricsComponent implements OnInit {
   constructor(private readonly gatewayService: GatewayService) { }
 
   ngOnInit(): void {
-    this.dayControl.setValue(this.formatAsYyyyMmDd(new Date()));
+    this.dayControl.setValue(new Date());
     this.loadMetrics();
   }
 
   loadMetrics(): void {
     if (this.dayControl.invalid) {
       this.dayControl.markAsTouched();
+      this.metrics = null;
+      this.metricItems = [];
+      this.noDataForDay = '';
+      this.clearDrilldown();
+      this.errorMessage = 'Selecione uma data valida para consulta.';
       return;
     }
 
-    const day = this.dayControl.value ?? '';
+    const day = this.getSelectedDayAsYyyyMmDd();
+    if (!day) {
+      this.dayControl.markAsTouched();
+      this.metrics = null;
+      this.metricItems = [];
+      this.noDataForDay = '';
+      this.clearDrilldown();
+      this.errorMessage = 'Selecione uma data valida para consulta.';
+      return;
+    }
     this.isLoading = true;
     this.errorMessage = '';
+    this.noDataForDay = '';
 
     this.gatewayService.getDailyMetrics(day)
       .pipe(finalize(() => { this.isLoading = false; }))
       .subscribe({
         next: (metrics) => {
           this.metrics = metrics;
+          this.noDataForDay = this.isMetricsEmpty(metrics) ? metrics.day : '';
           this.metricItems = [
             { label: 'Recebidas', value: metrics.receivedCount, drilldownEventType: 'RECEIVED' },
             { label: 'Classificadas', value: metrics.classifiedCount, drilldownEventType: null },
@@ -73,6 +90,7 @@ export class MetricsComponent implements OnInit {
         error: (error) => {
           const backendMessage = error?.error?.error;
           this.metrics = null;
+          this.noDataForDay = '';
           this.metricItems = [];
           this.clearDrilldown();
           this.errorMessage = backendMessage || 'Nao foi possivel carregar as metricas para o dia informado.';
@@ -93,7 +111,10 @@ export class MetricsComponent implements OnInit {
       return;
     }
 
-    const day = this.dayControl.value ?? '';
+    const day = this.getSelectedDayAsYyyyMmDd();
+    if (!day) {
+      return;
+    }
     this.selectedDrilldownLabel = label;
     this.selectedDrilldownType = eventType;
     this.drilldownItems = [];
@@ -119,6 +140,37 @@ export class MetricsComponent implements OnInit {
     this.drilldownItems = [];
     this.isDrilldownLoading = false;
     this.drilldownErrorMessage = '';
+  }
+
+  private isMetricsEmpty(metrics: DailyMetricsResponse): boolean {
+    const total =
+      metrics.receivedCount +
+      metrics.classifiedCount +
+      metrics.classificationFailedCount +
+      metrics.processedSuccessCount +
+      metrics.processedErrorCount;
+
+    return total === 0;
+  }
+
+  private getSelectedDayAsYyyyMmDd(): string | null {
+    const selectedDate = this.dayControl.value;
+    if (!(selectedDate instanceof Date) || Number.isNaN(selectedDate.getTime())) {
+      return null;
+    }
+
+    return this.formatAsYyyyMmDd(selectedDate);
+  }
+
+  private static validDateValidator(control: AbstractControl<Date | null>): ValidationErrors | null {
+    const value = control.value;
+    if (value === null) {
+      return null;
+    }
+
+    return value instanceof Date && !Number.isNaN(value.getTime())
+      ? null
+      : { invalidDate: true };
   }
 
   private formatAsYyyyMmDd(date: Date): string {

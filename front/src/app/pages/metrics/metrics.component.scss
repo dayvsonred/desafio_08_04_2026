@@ -37,6 +37,15 @@
   margin-bottom: 20px;
 }
 
+.warning-card {
+  border-left: 4px solid #ed6c02;
+  margin-bottom: 20px;
+}
+
+.warning-card p {
+  margin: 6px 0 0;
+}
+
 .metrics-content {
   display: flex;
   flex-direction: column;

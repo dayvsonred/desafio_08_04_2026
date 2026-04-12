@@ -4,21 +4,24 @@
 </section>
 
 <mat-card class="form-card">
-  <form class="metrics-form" (ngSubmit)="loadMetrics()">
+  <form class="metrics-form" (submit)="$event.preventDefault(); loadMetrics()">
     <mat-form-field appearance="outline">
-      <mat-label>Dia (yyyyMMdd)</mat-label>
+      <mat-label>Dia</mat-label>
       <input
         matInput
+        [matDatepicker]="dayPicker"
         [formControl]="dayControl"
-        placeholder="20260411"
-        maxlength="8"
+        placeholder="Selecione uma data"
+        readonly
       />
-      <mat-hint>Exemplo: 20260411</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="dayPicker"></mat-datepicker-toggle>
+      <mat-datepicker #dayPicker></mat-datepicker>
+      <mat-hint>Selecione o dia para consultar as métricas.</mat-hint>
       <mat-error *ngIf="dayControl.hasError('required')">
         Informe o dia.
       </mat-error>
-      <mat-error *ngIf="dayControl.hasError('pattern')">
-        Use o formato yyyyMMdd.
+      <mat-error *ngIf="dayControl.hasError('invalidDate')">
+        Selecione uma data valida.
       </mat-error>
     </mat-form-field>
 
@@ -35,6 +38,11 @@
 <mat-card class="error-card" *ngIf="!isLoading && errorMessage">
   <strong>Falha ao consultar metricas</strong>
   <p>{{ errorMessage }}</p>
+</mat-card>
+
+<mat-card class="warning-card" *ngIf="!isLoading && !errorMessage && noDataForDay">
+  <strong>Sem dados para o dia {{ noDataForDay }}.</strong>
+  <p>Isso indica que nao houve eventos registrados nesse dia ate o momento.</p>
 </mat-card>
 
 <section *ngIf="!isLoading && metrics" class="metrics-content">
